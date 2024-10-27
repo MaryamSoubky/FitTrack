@@ -9,7 +9,6 @@
           <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
           <link rel="stylesheet" href="../Public/css/font-awesome.min.css">
           <link rel="stylesheet" href="../Public/css/aos.css">
-          <link rel="stylesheet" href="../Public/css/main.css">
      </head>
      <body>
           <?php include 'Partials/navbar.php';?>
@@ -29,15 +28,11 @@
                          </div>
                          <div class="mx-auto mt-4 mt-lg-0 mt-md-0 col-lg-5 col-md-6 col-12">
                               <h2 class="mb-4" data-aos="fade-up" data-aos-delay="600">Where you can <span>find us</span></h2>
-                              <p data-aos="fade-up" data-aos-delay="800"><i class="fa fa-map-marker mr-1"></i> 120-240 Rio de
-                              Janeiro - State of Rio de Janeiro, Brazil</p>
-                              <!-- How to change your own map point
-                               1. Go to Google Maps
-	                          2. Click on your location point
-                               3. Click "Share" and choose "Embed map" tab
-	                          4. Copy only URL and paste it within the src="" field below -->
+                              <p data-aos="fade-up" data-aos-delay="800"><i class="fa fa-map-marker mr-1"></i> miu</p>
+                              
                               <div class="google-map" data-aos="fade-up" data-aos-delay="900">
-                                   <iframe src="https://maps.google.com/maps?q=Av.+Lúcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                                   <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3449.403346256985!2d31.48939097506606!3d30.16847011268473!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14581bab30f3291d%3A0x1b138aefe2d8bedb!2sMisr%20International%20University%20(MIU)!5e0!3m2!1sen!2seg!4v1729741568658!5m2!1sen!2seg"
+
                                    width="1920" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                               </div>
                          </div>

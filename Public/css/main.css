@@ -29,9 +29,9 @@
     --dark-color:           #03045E;
     --about-bg-color:       #03045E;
 
-    --gray-color:           #909090;
-    --link-color:           #404040;
-    --p-color:              #666262;
+    --light-blue-color:     #90E0EF;
+    --link-color:           #ADE8F4;
+    --p-color:              #ffffff;
 
     --base-font-family:     'Plain', sans-serif;
     --font-weight-bold:     bold;
@@ -383,6 +383,11 @@
       ABOUT & TEAM            
   -----------------------------------------*/
 
+  .about-heading {
+    color: var(--white-color);
+    text-align: center;
+  }
+
   .about {
     background: var(--about-bg-color);
   }
@@ -394,7 +399,6 @@
 
   .about-working-hours strong {
     color: var(--white-color);
-    opacity: 0.85;
   }
 
   .team-thumb {

@@ -10,119 +10,82 @@
           <link rel="stylesheet" href="../Public/css/font-awesome.min.css">
           <link rel="stylesheet" href="../Public/css/aos.css">
           <link rel="stylesheet" href="../Public/css/main.css">
+          <link rel="stylesheet" href="../Public/css/styles.css">
+
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+          
      </head>
      <body>
-          <?php include 'Partials/navbar.php';?>
-     <!-- SCHEDULE -->
-          <section class="schedule section" id="schedule">
-               <div class="container">
-                    <div class="row">
-                         <div class="col-lg-12 col-12 text-center">
-                              <h6 data-aos="fade-up">our weekly GYM schedules</h6>
-                              <h2 class="text-white" data-aos="fade-up" data-aos-delay="200">Workout Timetable</h2>
-                         </div>
-                         <div class="col-lg-12 py-5 col-md-12 col-12">
-                              <table class="table table-bordered table-responsive schedule-table" data-aos="fade-up"
-                                  data-aos-delay="300">
-                                  <thead class="thead-light">
-                                      <th><i class="fa fa-calendar"></i></th>
-                                      <th>Mon</th>
-                                      <th>Tue</th>
-                                      <th>Wed</th>
-                                      <th>Thu</th>
-                                      <th>Fri</th>
-                                      <th>Sat</th>
-                                  </thead>
+     <?php include 'Partials/navbar.php';?>
+     <main class="container">
+        <div class="grid">
+            <!-- Performance Analytics Section with Chart.js -->
+            <section id="analytics">
+                <hgroup>
+                    <h2>Performance Analytics</h2>
+                    <h3>Track your progress with interactive charts</h3>
+                </hgroup>
+                <p>Visualize your workout data, monitor improvements in strength, stamina, and goal achievements.</p>
+                <figure>
+                    <canvas id="performanceChart"></canvas> <!-- Chart.js canvas -->
+                    <figcaption>Weekly Performance Overview</figcaption>
+                </figure>
+                <h3>Workout Progress</h3>
+                <p>Check your weekly and monthly workout performance, calories burned, and goals achieved.</p>
+            </section>
 
-                                  <tbody>
-                                      <tr>
-                                          <td><small>7:00 am</small></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                          <td>
-                                              <strong>Power Fitness</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                          <td></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Yoga Section</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                      </tr>
+            <!-- Reminders Section -->
+            <section id="reminders">
+                <hgroup>
+                    <h2>Reminders & Notifications</h2>
+                    <h3>Stay consistent with fitness goals</h3>
+                </hgroup>
+                <p>Set reminders for your next workout and fitness goals.</p>
+                <form id="reminderForm">
+                    <label for="reminderText">Reminder</label>
+                    <input type="text" id="reminderText" placeholder="Enter reminder..." required>
+                    <label for="reminderDate">Date & Time</label>
+                    <input type="datetime-local" id="reminderDate" required>
+                    <button type="submit" class="btn-reminder">Set Reminder</button>
+                </form>
+                <ul id="reminderList" class="reminder-list">
+                    <!-- Reminder list items will be populated dynamically -->
+                </ul>
+            </section>
 
-                                      <tr>
-                                          <td><small>9:00 am</small></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                          <td>
-                                              <strong>Areobic</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                      </tr>
+            <!-- Social Sharing Section -->
+            <section id="social">
+                <hgroup>
+                    <h2>Social Sharing</h2>
+                    <h3>Share your progress with friends</h3>
+                </hgroup>
+                <p>Motivate your friends by sharing your fitness achievements on social media.</p>
+                <button class="btn-share">Share Progress</button>
+                <p id="shareFallback" style="display: none;">Sharing is not supported on this device. You can copy the link manually or use the following social links:</p>
+                <ul id="socialLinks" style="display: none;">
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL" target="_blank">Share on Facebook</a></li>
+                    <li><a href="https://twitter.com/intent/tweet?url=YOUR_URL&text=Check%20out%20my%20fitness%20progress!" target="_blank">Share on Twitter</a></li>
+                </ul>
+            </section>
+        </div>
+    </main>
 
-                                      <tr>
-                                          <td><small>11:00 am</small></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>11:00 am - 2:00 pm</span>
-                                          </td>
-                                          <td>
-                                              <strong>Areobic</strong>
-                                              <span>11:30 am - 3:30 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Body work</strong>
-                                              <span>11:50 am - 5:20 pm</span>
-                                          </td>
-                                      </tr>
 
-                                      <tr>
-                                          <td><small>2:00 pm</small></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>2:00 pm - 4:00 pm</span>
-                                          </td>
-                                          <td>
-                                              <strong>Power lifting</strong>
-                                              <span>3:00 pm - 6:00 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>6:00 pm - 9:00 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Crossfit</strong>
-                                              <span>5:00 pm - 7:00 pm</span>
-                                          </td>
-                                        </tr>
-                                   </tbody>
-                              </table>
-                         </div>
-                         <button>Edit Schedule</button>
-                    </div>
-               </div>
-          </section>
+</body>
+    
+</html>
+
+    
+     
           <?php include 'Partials/footer.php';?>
           <script src="../Public/js/jquery.min.js"></script>
           <script src="../Public/js/bootstrap.min.js"></script>
+          
+          
           <script src="../Public/js/aos.js"></script>
           <script src="../Public/js/smoothscroll.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js library -->
           <script src="../Public/js/custom.js"></script>
+          <script src="../public/js/scripts.js"></script>
      </body>
 </html>
