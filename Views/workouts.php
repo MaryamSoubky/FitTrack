@@ -1,51 +1,75 @@
-<!-- Views/workout.php -->
 <?php
-include '../Controller/workout_controller.php'; // Ensure this path is correct
+// Ensure this path is correct
+include '../Controller/workout_controller.php'; // Adjust path as necessary
 ?>
 
+
+
+
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Log Workout</title>
-    <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../Public/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../Public/css/aos.css">
-    <link rel="stylesheet" href="../Public/css/main.css">
-    <link rel="stylesheet" href="../Public/css/style_workout.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Workout Logger</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="../Public/css/style_workout.css"> <!-- Link to Custom Styles -->
 </head>
+
 <body>
-<?php include '../Views/Partials/navbar.php'; ?>
-    <h1>Log Your Workout</h1>
+    <!-- Navigation Bar -->
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Workout Tracker</strong></li>
+        </ul>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Progress</a></li>
+            <li><a href="#" role="button">Log Workout</a></li>
+        </ul>
+    </nav>
 
-    <?php if (!empty($errorMessages)): ?>
-        <p class="error"><?php echo implode('<br>', $errorMessages); ?></p>
-    <?php elseif (isset($_GET['logged']) && $_GET['logged'] == 'true'): ?>
-        <p class="success">Workout logged successfully!</p>
-    <?php endif; ?>
+    <!-- Main Section -->
+    <main class="container">
+        <section class="workout-card">
+            <hgroup>
+                <h2>Log Your Workout</h2>
+                <h3>Track your exercise performance efficiently</h3>
+            </hgroup>
+            <form action="../Controller/workout_controller.php" method="POST">
+                <!-- Exercise Type -->
+                <label for="exercise">Exercise Type:</label>
+                <input type="text" id="exercise" name="exercise" placeholder="e.g., Running, Cycling" required>
 
-    <form method="POST" action="workout.php">
-        <label for="exercise_type">Exercise Type:</label>
-        <input type="text" id="exercise_type" name="exercise_type" required>
+                <!-- Duration -->
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" name="duration" placeholder="e.g., 60" min="1" max="300" required>
 
-        <label for="duration">Duration (in minutes):</label>
-        <input type="number" id="duration" name="duration" required>
+                <!-- Intensity -->
+                <label for="intensity">Intensity (1-10):</label>
+                <input type="number" id="intensity" name="intensity" min="1" max="10" required>
 
-        <label for="intensity">Intensity:</label>
-        <select id="intensity" name="intensity" required>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
+                <!-- Frequency -->
+                <label for="frequency">Frequency (per week):</label>
+                <input type="number" id="frequency" name="frequency" min="1" max="7" required>
 
-        <label for="frequency">Frequency (times per week):</label>
-        <input type="number" id="frequency" name="frequency" required min="1" max="7>
+                <!-- Notes (Optional) -->
+                <label for="notes">Additional Notes:</label>
+                <textarea id="notes" name="notes" rows="4" placeholder="How did the workout feel?"></textarea>
 
-        <button type="submit">Log Workout</button>
-    </form>
+                <!-- Submit Button -->
+                <button type="submit" class="button-primary">Submit Workout</button>
+            </form>
+        </section>
+    </main>
 
-    <h2>Your Progress</h2>
-    <p>Total Workouts: <?php echo isset($progress['total_workouts']) ? $progress['total_workouts'] : 0; ?></p>
-    <p>Total Duration: <?php echo isset($progress['total_duration']) ? $progress['total_duration'] : 0; ?> minutes</p>
+    <!-- Footer Section -->
+    <footer class="container">
+        <small><a href="#">Terms of Service</a> • <a href="#">Privacy Policy</a></small>
+    </footer>
 </body>
+
 </html>
