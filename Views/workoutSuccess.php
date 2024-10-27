@@ -32,10 +32,7 @@
             </section>
         </div>
     </main>
-
-    <footer class="container">
-        <small><a href="#">Terms of Service</a> • <a href="#">Privacy Policy</a></small>
-    </footer>
+    <?php include 'Partials/footer.php';?>
 </body>
 
 </html>

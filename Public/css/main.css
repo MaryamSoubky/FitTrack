@@ -99,7 +99,7 @@
   }
 
   h6 {
-    color: var(--gray-color);
+    color: var(--white-color);
     font-size: var(--h6-font-size);
     line-height: inherit;
     margin: 0;

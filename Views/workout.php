@@ -16,6 +16,7 @@ include '../Controller/workout_controller.php'; // Adjust path as necessary
 
 </head>
 <body>
+    <?php include 'Partials/navbar.php';?>
     <h1>Log Your Workout</h1>
 
     <?php if (isset($_GET['logged']) && $_GET['logged'] == 'true'): ?>
@@ -45,5 +46,6 @@ include '../Controller/workout_controller.php'; // Adjust path as necessary
     <h2>Your Progress</h2>
     <p>Total Workouts: <?php echo isset($progress['total_workouts']) ? $progress['total_workouts'] : 0; ?></p>
     <p>Total Duration: <?php echo isset($progress['total_duration']) ? $progress['total_duration'] : 0; ?> minutes</p>
+    <?php include 'Partials/footer.php';?>
 </body>
 </html>
