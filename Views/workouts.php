@@ -2,15 +2,8 @@
 // Ensure this path is correct
 include '../Controller/workout_controller.php'; // Adjust path as necessary
 ?>
-
-
-
-
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,18 +13,7 @@ include '../Controller/workout_controller.php'; // Adjust path as necessary
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <nav class="container-fluid">
-        <ul>
-            <li><strong>Workout Tracker</strong></li>
-        </ul>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Progress</a></li>
-            <li><a href="#" role="button">Log Workout</a></li>
-        </ul>
-    </nav>
-
+    <?php include 'Partials/navbar.php';?>
     <!-- Main Section -->
     <main class="container">
         <section class="workout-card">
@@ -65,11 +47,7 @@ include '../Controller/workout_controller.php'; // Adjust path as necessary
             </form>
         </section>
     </main>
-
-    <!-- Footer Section -->
-    <footer class="container">
-        <small><a href="#">Terms of Service</a> • <a href="#">Privacy Policy</a></small>
-    </footer>
+    <?php include 'Partials/footer.php';?>
 </body>
 
 </html>
