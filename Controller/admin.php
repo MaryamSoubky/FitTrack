@@ -176,7 +176,6 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <header>
             <div class="image-text">
                 <span class="image">
-                    <img src="photos/download (1).png" alt="logo">
                 </span>
                 <div class="text logo-text">
                     <span class="name">Admin Panel</span>

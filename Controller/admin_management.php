@@ -4,48 +4,28 @@ session_start();
 
 // Handle admin addition
 if (isset($_POST['addAdmin'])) {
-    $username = trim($_POST['adminUsername']);
-    $email = trim($_POST['adminEmail']);
-    $password = trim($_POST['adminPassword']);
-    $confirmPassword = trim($_POST['adminConfirmPassword']);
+    $user_id = trim($_POST['user_id']);
+    $access_level = trim($_POST['access_level']);
 
-    // Check if username or email already exists
-    $checkStmt = $conn->prepare("SELECT * FROM admins WHERE username = ? OR email = ?");
-    $checkStmt->bind_param("ss", $username, $email);
-    $checkStmt->execute();
-    $checkResult = $checkStmt->get_result();
-
-    if ($checkResult->num_rows > 0) {
-        echo "<script>alert('Username or email already exists! Please choose a different one.');</script>";
-    } elseif ($password !== $confirmPassword) {
-        echo "<script>alert('Passwords do not match!');</script>";
+    $stmt = $conn->prepare("INSERT INTO Admins (user_id, access_level) VALUES (?, ?)");
+    $stmt->bind_param("is", $user_id, $access_level);
+    if ($stmt->execute()) {
+        echo "<script>alert('Admin added successfully!');</script>";
     } else {
-        // If everything is okay, add the new admin
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $conn->prepare("INSERT INTO admins (username, email, password_hash, created_at) VALUES (?, ?, ?, NOW())");
-        $stmt->bind_param("sss", $username, $email, $passwordHash);
-        
-        if ($stmt->execute()) {
-            echo "<script>alert('Admin added successfully!');</script>";
-        } else {
-            echo "<script>alert('Error adding admin: " . $stmt->error . "');</script>";
-        }
-        $stmt->close();
+        echo "<script>alert('Error adding admin: " . $stmt->error . "');</script>";
     }
-    $checkStmt->close();
+    $stmt->close();
 }
 
 // Handle admin editing
 if (isset($_POST['editAdmin'])) {
-    $adminId = $_POST['adminId'];
-    $editUsername = trim($_POST['editAdminUsername']);
-    $editEmail = trim($_POST['editAdminEmail']);
+    $admin_id = $_POST['adminId'];
+    $new_access_level = trim($_POST['newAccessLevel']);
 
-    $stmt = $conn->prepare("UPDATE admins SET username = ?, email = ? WHERE admin_id = ?");
-    $stmt->bind_param("ssi", $editUsername, $editEmail, $adminId);
-    
+    $stmt = $conn->prepare("UPDATE Admins SET access_level = ? WHERE admin_id = ?");
+    $stmt->bind_param("si", $new_access_level, $admin_id);
     if ($stmt->execute()) {
-        echo "<script>alert('Admin updated successfully!');</script>";
+        echo "<script>alert('Admin access level updated successfully!');</script>";
     } else {
         echo "<script>alert('Error updating admin: " . $stmt->error . "');</script>";
     }
@@ -54,11 +34,10 @@ if (isset($_POST['editAdmin'])) {
 
 // Handle admin deletion
 if (isset($_POST['deleteAdmin'])) {
-    $adminId = $_POST['adminId'];
+    $admin_id = $_POST['adminId'];
 
-    $stmt = $conn->prepare("DELETE FROM admins WHERE admin_id = ?");
-    $stmt->bind_param("i", $adminId);
-    
+    $stmt = $conn->prepare("DELETE FROM Admins WHERE admin_id = ?");
+    $stmt->bind_param("i", $admin_id);
     if ($stmt->execute()) {
         echo "<script>alert('Admin deleted successfully!');</script>";
     } else {
@@ -67,45 +46,75 @@ if (isset($_POST['deleteAdmin'])) {
     $stmt->close();
 }
 
-// Fetch admins from database for display
-$adminsResult = $conn->query("SELECT admin_id, username, email FROM admins");
+// Fetch admins for selection
+$adminsResult = $conn->query("SELECT admin_id, u.username, u.email, a.access_level, a.created_at 
+                              FROM Admins a JOIN Users u ON a.user_id = u.user_id");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../Public/css/style_admin_management.css">
+
     <title>Admin Management</title>
-    <link rel="stylesheet" href="./style_admin.css">
+    <style>
+        .section-header { font-size: 1.5em; margin-bottom: 10px; }
+        form { margin-bottom: 20px; }
+        select, input, button { padding: 10px; margin-top: 5px; width: 100%; }
+    </style>
 </head>
 <body>
     <section class="home">
         <div class="text">Admin Management</div>
 
-        <h3>Add Admin</h3>
+        <h3 class="section-header">Add Admin</h3>
         <form method="POST" action="">
-            <input type="text" name="adminUsername" placeholder="Admin Username" required>
-            <input type="email" name="adminEmail" placeholder="Admin Email" required>
-            <input type="password" name="adminPassword" placeholder="Password" required>
-            <input type="password" name="adminConfirmPassword" placeholder="Confirm Password" required>
+            <!-- Select user to assign admin role -->
+            <select name="user_id" required>
+                <option value="">Select User</option>
+                <?php 
+                // Fetch all users to assign as admin
+                $usersResult = $conn->query("SELECT user_id, username FROM Users");
+                while ($user = $usersResult->fetch_assoc()): ?>
+                    <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+                <?php endwhile; ?>
+            </select>
+            <!-- Set access level -->
+            <select name="access_level" required>
+                <option value="">Select Access Level</option>
+                <option value="super_admin">Super Admin</option>
+                <option value="moderator">Moderator</option>
+                <option value="support">Support</option>
+            </select>
             <button type="submit" name="addAdmin">Add Admin</button>
         </form>
 
-        <h3>Edit or Delete Admin</h3>
+        <h3 class="section-header">Edit or Delete Admin</h3>
         <form method="POST" action="">
+            <!-- Select admin to edit or delete -->
             <select name="adminId" required>
                 <option value="">Select Admin</option>
-                <?php while ($row = $adminsResult->fetch_assoc()): ?>
-                    <option value="<?php echo $row['admin_id']; ?>"><?php echo $row['username']; ?> (<?php echo $row['email']; ?>)</option>
+                <?php while ($admin = $adminsResult->fetch_assoc()): ?>
+                    <option value="<?php echo $admin['admin_id']; ?>">
+                        <?php echo $admin['username']; ?> (<?php echo $admin['access_level']; ?>)
+                    </option>
                 <?php endwhile; ?>
             </select>
-            <input type="text" name="editAdminUsername" placeholder="New Username">
-            <input type="email" name="editAdminEmail" placeholder="New Email">
+
+            <!-- Set new access level -->
+            <select name="newAccessLevel">
+                <option value="">Select New Access Level</option>
+                <option value="super_admin">Super Admin</option>
+                <option value="moderator">Moderator</option>
+                <option value="support">Support</option>
+            </select>
+
             <button type="submit" name="editAdmin">Edit Admin</button>
             <button type="submit" name="deleteAdmin">Delete Admin</button>
         </form>
 
-        <!-- Back Button to return to admin.php -->
+        <!-- Back Button -->
         <form action="admin.php" method="get">
             <button type="submit">Back to Admin Dashboard</button>
         </form>
