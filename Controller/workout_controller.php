@@ -1,41 +1,56 @@
 <?php
-// workout_controller.php
-include '../Models/workout_model.php'; // Ensure this path is correct
+include_once 'config.php'; 
+include_once '../Models/workout_model.php'; 
 
-session_start();
-$errorMessages = [];
-$progress = [];
 
-// Initialize the WorkoutModel
-$workoutModel = new WorkoutModel();
+class WorkoutController {
+    private $model;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $exercise_type = trim($_POST['exercise_type']);
-    $duration = trim($_POST['duration']);
-    $intensity = $_POST['intensity'];
-    $frequency = trim($_POST['frequency']);
-
-    // Validation
-    if (empty($exercise_type)) {
-        $errorMessages[] = "Exercise type is required.";
-    }
-    if (empty($duration) || $duration <= 0) {
-        $errorMessages[] = "Duration must be a positive number.";
-    }
-    if ($frequency < 1 || $frequency > 7) {
-        $errorMessages[] = "Frequency must be between 1 and 7.";
+    public function __construct($dbConnection) {
+        $this->model = new WorkoutModel($dbConnection);
     }
 
-    // If no errors, log the workout
-    if (empty($errorMessages)) {
-        $workoutModel->logWorkout($exercise_type, $duration, $intensity, $frequency);
+    public function addWorkout() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            // Sanitize user input
+            $exercise = htmlspecialchars($_POST['exercise']);
+            $duration = (int)$_POST['duration'];
+            $intensity = (int)$_POST['intensity'];
+            $frequency = (int)$_POST['frequency'];
+            $notes = isset($_POST['notes']) ? htmlspecialchars($_POST['notes']) : '';
 
-        // Redirect to the same page with a success message
-        header('Location: workout.php?logged=true');
-        exit();
+            // Server-side validation
+            if (strlen($exercise) < 3 || strlen($exercise) > 50) {
+                echo "Exercise type must be between 3 and 50 characters.";
+                return;
+            }
+
+            if ($duration < 1 || $duration > 300) {
+                echo "Duration must be between 1 and 300 minutes.";
+                return;
+            }
+
+            if ($intensity < 1 || $intensity > 10) {
+                echo "Intensity must be between 1 and 10.";
+                return;
+            }
+
+            if ($frequency < 1 || $frequency > 7) {
+                echo "Frequency must be between 1 and 7 days per week.";
+                return;
+            }
+
+            // Add workout to the database
+            if ($this->model->addWorkout($exercise, $duration, $intensity, $frequency, $notes)) {
+                header("Location: workoutSuccess.php");
+            } else {
+                echo "Failed to log the workout. Please try again.";
+            }
+        }
+    }
+
+    public function showWorkouts() {
+        return $this->model->getWorkouts();
     }
 }
-
-// Get progress regardless of whether there were errors or not
-$progress = $workoutModel->getProgress();
 ?>

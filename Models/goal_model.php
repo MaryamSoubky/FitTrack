@@ -1,28 +1,29 @@
 <?php
-include '../Controller/config.php';  // Adjust the path as necessary
-
+    
+include '../Controller/config.php'; 
 class GoalModel {
-    private $conn;
+    private $db;
 
     public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+        $this->db = $dbConnection;
     }
 
-    public function createGoal($userId, $goalType, $targetValue, $goalStartDate, $goalEndDate) {
-        $stmt = $this->conn->prepare("INSERT INTO goals (user_id, goal_type, target_value, goal_start_date, goal_end_date) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("issss", $userId, $goalType, $targetValue, $goalStartDate, $goalEndDate);
-        $stmt->execute();
-        $stmt->close();
+    public function setGoal($userId, $goalType, $targetValue, $deadline) {
+        $stmt = $this->db->prepare("INSERT INTO goals (user_id, goal_type, target_value, deadline) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isis", $userId, $goalType, $targetValue, $deadline);
+        return $stmt->execute();
     }
 
-    public function getGoals($userId) {
-        $stmt = $this->conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+    public function getGoalsByUser($userId) {
+        $stmt = $this->db->prepare("SELECT * FROM goals WHERE user_id = ? ORDER BY created_at DESC");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Add more methods as needed
+    public function updateProgress($goalId, $newProgress) {
+        $stmt = $this->db->prepare("UPDATE goals SET current_value = ? WHERE id = ?");
+        $stmt->bind_param("ii", $newProgress, $goalId);
+        return $stmt->execute();
+    }
 }
-?>

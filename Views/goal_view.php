@@ -147,7 +147,6 @@
     </style>
 </head>
 <body>
-    <?php include 'Partials/navbar.php';?>
     <main class="container">
         <section class="goal-setting-card">
             <hgroup>
@@ -188,7 +187,6 @@
             <p id="confirmation-message" style="display:none; color: green;">Goal successfully set!</p>
         </section>  
     </main>
-    <?php include 'Partials/footer.php';?>
     <script src="../public/js/goal.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

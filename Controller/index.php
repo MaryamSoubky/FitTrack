@@ -1,4 +1,4 @@
-<?php
+<?php 
 // Include the database connection from config.php
 include_once 'config.php';  // Adjust path if necessary
 
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
             // Prepare and bind SQL statement
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)");
             $stmt->bind_param("sss", $name, $email, $passwordHash);
 
             if ($stmt->execute()) {
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // If there are no errors, process the login
         if (empty($signInErrors)) {
             // Prepare and bind SQL statement for user login
-            $stmt = $conn->prepare("SELECT id, name, password_hash FROM users WHERE email = ?");
+            $stmt = $conn->prepare("SELECT user_id, username, password_hash FROM Users WHERE email = ?");
             $stmt->bind_param("s", $signInEmail);
             $stmt->execute();
             $stmt->store_result();
@@ -93,14 +93,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['user_id'] = $userId;
                     $_SESSION['user_name'] = $userName;
 
-                    // Check if the user is an admin by looking up their email in the admins table
-                    $adminCheckStmt = $conn->prepare("SELECT admin_id FROM admins WHERE email = ?");
-                    $adminCheckStmt->bind_param("s", $signInEmail);
+                    // Check if the user is an admin by looking up their user_id in the Admins table
+                    $adminCheckStmt = $conn->prepare("SELECT admin_id FROM Admins WHERE user_id = ?");
+                    $adminCheckStmt->bind_param("i", $userId);
                     $adminCheckStmt->execute();
                     $adminCheckStmt->store_result();
 
                     if ($adminCheckStmt->num_rows > 0) {
-                        // User is an admin, redirect to admin.php (not admin_dashboard.php)
+                        // User is an admin, redirect to admin.php
                         header('Location: ../Controller/admin.php');
                     } else {
                         // User is not an admin, redirect to the regular home page
