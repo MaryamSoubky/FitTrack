@@ -1,152 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Goal Tracker</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <link rel="stylesheet" href="../Public/css/style_goals.css">
-    <style>
-        /* General Styling */
-        body {
-            background: linear-gradient(135deg, #f3f7f9, #e0e8ec);
-            color: #333;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goal Setting & Tracking</title>
+  <style>
+    /* CSS Styling */
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+      margin: 0;
+    }
 
-        .goal-setting-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-        }
+    h1, h2 {
+      color: #333;
+    }
 
-        h2, h3 {
-            color: #4a90e2;
-        }
+    .goal-form, .current-goals {
+      margin-top: 20px;
+    }
 
-        form label {
-            font-weight: bold;
-            margin-top: 1rem;
-            display: inline-block;
-            text-align: left;
-        }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
 
-        select, input[type="number"], input[type="date"] {
-            width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
+    input[type="number"], input[type="date"], select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
 
-        .button-primary {
-            background-color: #4a90e2;
-            color: #fff;
-            font-weight: bold;
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    button[type="submit"] {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
 
-        .button-primary:hover {
-            background-color: #357abf;
-        }
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
 
-        /* Circular Progress Bar */
-        .progress-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            height: 120px;
-            width: 120px;
-        }
+    .progress-bar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
 
-        .progress-circle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            clip: rect(0px, 120px, 120px, 60px);
-            transform: rotate(-90deg);
-        }
-
-        .progress-bar {
-            border-radius: 50%;
-            clip: rect(0px, 60px, 120px, 0px);
-            background-color: #4a90e2;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            animation: progress 2s ease-out forwards; /* Keep it to show complete progress */
-        }
-
-        @keyframes progress {
-            0% { transform: rotate(0); }
-            100% { transform: rotate(216deg); /* Adjust based on actual progress */ }
-        }
-
-        .progress-text {
-            position: absolute;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        /* Tooltip Styling */
-        .tooltip {
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            padding: 5px 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Motivational Quote Styling */
-        .motivational-quote {
-            margin-top: 20px;
-            font-style: italic;
-            color: #555;
-        }
-
-    </style>
+    .progress {
+      height: 20px;
+      background-color: #4CAF50;
+      width: 0%;
+    }
+  </style>
 </head>
 <body>
+    <?php include 'Partials/navbar.php';?>
     <main class="container">
         <section class="goal-setting-card">
             <hgroup>
@@ -161,17 +82,14 @@
                     <option value="endurance">Endurance</option>
                 </select>
 
-                <label for="targetValue" class="tooltip">
-                    Target Value:
-                    <span class="tooltip-text">Example: 5kg for Weight Loss</span>
-                </label>
-                <input type="number" id="targetValue" name="targetValue" placeholder="e.g., 10" required>
+      <label for="targetValue">Target Value:</label>
+      <input type="number" id="targetValue" name="targetValue" placeholder="e.g., 5 kg" required>
 
-                <label for="deadline" class="tooltip">
-                    Deadline:
-                    <span class="tooltip-text">Select a realistic deadline</span>
-                </label>
-                <input type="date" id="deadline" name="deadline" required>
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" required>
+
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" name="endDate" required>
 
                 <button type="submit" class="button-primary">Set Goal</button>
             </form>
@@ -187,6 +105,7 @@
             <p id="confirmation-message" style="display:none; color: green;">Goal successfully set!</p>
         </section>  
     </main>
+    <?php include 'Partials/footer.php';?>
     <script src="../public/js/goal.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

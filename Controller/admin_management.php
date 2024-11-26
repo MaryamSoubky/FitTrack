@@ -46,23 +46,18 @@ if (isset($_POST['deleteAdmin'])) {
     $stmt->close();
 }
 
-// Fetch admins and users for selection
-$adminsResult = $conn->query("SELECT a.admin_id, u.username, u.email, a.access_level, a.created_at 
-                              FROM Admins a JOIN Users u ON a.user_id = u.user_id");
-$usersResult = $conn->query("SELECT user_id, username FROM Users");
+// Fetch admins from database for display
+$adminsResult = $conn->query("SELECT admin_id, username, email FROM admins");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../Public/css/style_admin_management.css">
+
     <title>Admin Management</title>
-    <link rel="stylesheet" href="../Views/css/style_admin.css">
-    <style>
-        .section-header { font-size: 1.5em; margin-bottom: 10px; }
-        form { margin-bottom: 20px; }
-        select, input, button { padding: 10px; margin-top: 5px; width: 100%; }
-    </style>
+    <link rel="stylesheet" href="./style_admin.css">
 </head>
 <body>
     <section class="home">
@@ -70,20 +65,10 @@ $usersResult = $conn->query("SELECT user_id, username FROM Users");
 
         <h3 class="section-header">Add Admin</h3>
         <form method="POST" action="">
-            <!-- Select user to assign admin role -->
-            <select name="user_id" required>
-                <option value="">Select User</option>
-                <?php while ($user = $usersResult->fetch_assoc()): ?>
-                    <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
-                <?php endwhile; ?>
-            </select>
-            <!-- Set access level -->
-            <select name="access_level" required>
-                <option value="">Select Access Level</option>
-                <option value="super_admin">Super Admin</option>
-                <option value="moderator">Moderator</option>
-                <option value="support">Support</option>
-            </select>
+            <input type="text" name="adminUsername" placeholder="Admin Username" required>
+            <input type="email" name="adminEmail" placeholder="Admin Email" required>
+            <input type="password" name="adminPassword" placeholder="Password" required>
+            <input type="password" name="adminConfirmPassword" placeholder="Confirm Password" required>
             <button type="submit" name="addAdmin">Add Admin</button>
         </form>
 

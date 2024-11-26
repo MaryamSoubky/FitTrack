@@ -1,5 +1,7 @@
-<?php
+<?php 
 include_once 'config.php';
+include_once '../Models/userclass.php';
+
 session_start();
 
 // Handle user addition
@@ -8,12 +10,13 @@ if (isset($_POST['addUser'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirmPassword = trim($_POST['confirmPassword']);
-    $age = trim($_POST['age']);
-
+    $role_id = trim($_POST['role_id']);
+    $user_type_id = trim($_POST['user_type_id']);
+ 
     if ($password === $confirmPassword) {
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, age) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $name, $email, $passwordHash, $age);
+        $stmt = $conn->prepare("INSERT INTO Users (username, email, password_hash, role_id, user_type_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssii", $name, $email, $passwordHash, $role_id, $user_type_id);
         if ($stmt->execute()) {
             echo "<script>alert('User added successfully!');</script>";
         } else {
@@ -30,10 +33,11 @@ if (isset($_POST['editUser'])) {
     $userId = $_POST['userId'];
     $editName = trim($_POST['editName']);
     $editEmail = trim($_POST['editEmail']);
-    $editAge = trim($_POST['editAge']);
+    $role_id = trim($_POST['editRoleId']);
+    $user_type_id = trim($_POST['editUserTypeId']);
 
-    $stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?");
-    $stmt->bind_param("ssii", $editName, $editEmail, $editAge, $userId);
+    $stmt = $conn->prepare("UPDATE Users SET username = ?, email = ?, role_id = ?, user_type_id = ? WHERE user_id = ?");
+    $stmt->bind_param("ssiii", $editName, $editEmail, $role_id, $user_type_id, $userId);
     if ($stmt->execute()) {
         echo "<script>alert('User updated successfully!');</script>";
     } else {
@@ -46,7 +50,7 @@ if (isset($_POST['editUser'])) {
 if (isset($_POST['deleteUser'])) {
     $userId = $_POST['userId'];
 
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $stmt = $conn->prepare("DELETE FROM Users WHERE user_id = ?");
     $stmt->bind_param("i", $userId);
     if ($stmt->execute()) {
         echo "<script>alert('User deleted successfully!');</script>";
@@ -57,7 +61,11 @@ if (isset($_POST['deleteUser'])) {
 }
 
 // Fetch users from database for display
-$usersResult = $conn->query("SELECT id, name, email, age FROM users");
+$usersResult = $conn->query("SELECT user_id, username, email, role_id, user_type_id FROM Users");
+
+// Fetch roles and user types for dropdowns
+$rolesResult = $conn->query("SELECT role_id, role_name FROM Roles");
+$userTypesResult = $conn->query("SELECT user_type_id, user_type_name FROM User_Types");
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +73,7 @@ $usersResult = $conn->query("SELECT id, name, email, age FROM users");
 <head>
     <meta charset="UTF-8">
     <title>User Management</title>
-    <link rel="stylesheet" href="../Views/css/style_admin.css">
+    <link rel="stylesheet" href="../Public/css/style_user_management.css">
 </head>
 <body>
     <section class="home">
@@ -77,7 +85,23 @@ $usersResult = $conn->query("SELECT id, name, email, age FROM users");
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-            <input type="number" name="age" placeholder="Age" required>
+
+            <!-- Role Selection -->
+            <select name="role_id" required>
+                <option value="">Select Role</option>
+                <?php while ($role = $rolesResult->fetch_assoc()): ?>
+                    <option value="<?php echo $role['role_id']; ?>"><?php echo $role['role_name']; ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <!-- User Type Selection -->
+            <select name="user_type_id" required>
+                <option value="">Select User Type</option>
+                <?php while ($userType = $userTypesResult->fetch_assoc()): ?>
+                    <option value="<?php echo $userType['user_type_id']; ?>"><?php echo $userType['user_type_name']; ?></option>
+                <?php endwhile; ?>
+            </select>
+
             <button type="submit" name="addUser">Add User</button>
         </form>
 
@@ -86,12 +110,32 @@ $usersResult = $conn->query("SELECT id, name, email, age FROM users");
             <select name="userId" required>
                 <option value="">Select User</option>
                 <?php while ($row = $usersResult->fetch_assoc()): ?>
-                    <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?> (<?php echo $row['email']; ?>)</option>
+                    <option value="<?php echo $row['user_id']; ?>"><?php echo $row['username']; ?> (<?php echo $row['email']; ?>)</option>
                 <?php endwhile; ?>
             </select>
             <input type="text" name="editName" placeholder="New Name">
             <input type="email" name="editEmail" placeholder="New Email">
-            <input type="number" name="editAge" placeholder="New Age">
+
+            <!-- Edit Role Selection -->
+            <select name="editRoleId">
+                <option value="">Select New Role</option>
+                <?php
+                $rolesResult->data_seek(0); // Reset roles result pointer
+                while ($role = $rolesResult->fetch_assoc()): ?>
+                    <option value="<?php echo $role['role_id']; ?>"><?php echo $role['role_name']; ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <!-- Edit User Type Selection -->
+            <select name="editUserTypeId">
+                <option value="">Select New User Type</option>
+                <?php
+                $userTypesResult->data_seek(0); // Reset user types result pointer
+                while ($userType = $userTypesResult->fetch_assoc()): ?>
+                    <option value="<?php echo $userType['user_type_id']; ?>"><?php echo $userType['user_type_name']; ?></option>
+                <?php endwhile; ?>
+            </select>
+
             <button type="submit" name="editUser">Edit User</button>
             <button type="submit" name="deleteUser">Delete User</button>
         </form>

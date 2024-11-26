@@ -1,3 +1,8 @@
+<?php
+session_start();
+include_once '../Controller/PageAccessController.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
      <head>
