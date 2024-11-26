@@ -1,7 +1,7 @@
 <?php
 
  require_once '../config.php';
- require_once '../Models/Page_Model.php';
+ require_once '../Models/';
 
 // Fetch all admins
 function getAdmins($db) {

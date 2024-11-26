@@ -129,14 +129,11 @@
                 <a href="../Views/schedules.php" class="nav-link smoothScroll">Schedule</a>
               </li>
               <li class="nav-item">
-                <a href="../Views/about.php" class="nav-link smoothScroll">About Us</a>
-              </li>
-              <li class="nav-item">
                 <a href="../Views/contact.php" class="nav-link smoothScroll">Contact Us</a>
               </li>
             </ul>
             <ul class="social-icon ml-lg-3">
-              <li><a href="#" class="fa fa-facebook"></a></li>
+              <li><a href="https://www.facebook.com/mostafaamin.ellakwa" class="fa fa-facebook"></a></li>
               <li><a href="#" class="fa fa-twitter"></a></li>
               <li><a href="#" class="fa fa-instagram"></a></li>
             </ul>

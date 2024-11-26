@@ -9,46 +9,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-
-// Initialize variables
-$totalUsers = $activeGoals = $workoutsToday = 0;
-$admin_id = $_SESSION['user_id'];
-
-// Fetch total users count
-$totalUsersQuery = "SELECT COUNT(*) FROM users";
-$totalUsersResult = $conn->query($totalUsersQuery);
-if ($totalUsersResult) {
-    $totalUsers = $totalUsersResult->fetch_row()[0]; // Get the first column of the first row
-} else {
-    die("Error fetching total users: " . $conn->error);
-}
-
-// Fetch admin statistics
-$statsQuery = "SELECT active_goals, workout_logs_today FROM Admin_Dashboard_Stats WHERE admin_id = ?";
-$stmt = $conn->prepare($statsQuery);
-$stmt->bind_param("i", $admin_id);
-
-if (!$stmt->execute()) {
-    die("Error executing query: " . $stmt->error);
-}
-
-$stmt->bind_result($activeGoals, $workoutsToday);
-if (!$stmt->fetch()) {
-    die("Error fetching results: " . $stmt->error);
-}
-$stmt->close();
-
-// Fetch recent user activities
-$recentActivitiesQuery = "SELECT u.username, w.exercise_type, w.duration, w.log_date 
-                          FROM Workout_Log w 
-                          JOIN Users u ON w.user_id = u.id 
-                          ORDER BY w.log_date DESC 
-                          LIMIT 5";
-$recentActivitiesResult = $conn->query($recentActivitiesQuery);
-if (!$recentActivitiesResult) {
-    die("Error fetching recent activities: " . $conn->error);
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -133,23 +93,46 @@ if (!$recentActivitiesResult) {
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Welcome to Admin Dashboard</h2>
-        <p>View key metrics and recent user activity below.</p>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="photos/download (1).png" alt="logo">
+                </span>
+                <div class="text logo-text">
+                    <span class="name">Admin Panel</span>
+                    <span class="profession">Dashboard</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
 
-        <!-- Dashboard Statistics -->
-        <div class="dashboard-stats">
-            <div class="stat-card">
-                <h3>Total Users</h3>
-                <p><?php echo htmlspecialchars($totalUsers); ?></p>
-            </div>
-            <div class="stat-card">
-                <h3>Active Goals</h3>
-                <p><?php echo htmlspecialchars($activeGoals); ?></p>
-            </div>
-            <div class="stat-card">
-                <h3>Workouts Today</h3>
-                <p><?php echo htmlspecialchars($workoutsToday); ?></p>
+        <div class="menu-bar">
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a href="admin_management.php">
+                        <i class='bx bx-user-circle icon'></i>
+                        <span class="text nav-text">Admin Management</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="user_management.php">
+                        <i class='bx bx-user-check icon'></i>
+                        <span class="text nav-text">User Management</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="bottom-content">
+                <li class="">
+                    <form method="POST" action="">
+                        <button type="submit" name="logout">
+                            <i class='bx bx-log-out icon'></i>
+                            <span class="text nav-text">Logout</span>
+                        </button>
+                    </form>
+                </li>
             </div>
         </div>
 

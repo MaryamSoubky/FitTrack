@@ -1,6 +1,6 @@
 <?php
 require_once '../config.php';
-include_once'../Models/Role_Model.php';
+
 // Fetch all permissions
 function getPermissions($db) {
     $query = "SELECT * FROM Permissions";

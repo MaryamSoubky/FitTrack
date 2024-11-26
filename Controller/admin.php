@@ -3,20 +3,12 @@
 include_once 'config.php';
 include_once '../Models/adminclass.php';
 
-// Start the session only if it's not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
+session_start();
 
 // Handle logout
 if (isset($_POST['logout'])) {
     session_destroy();
-    header("Location: index.php");
-    exit();
-}
-
-// Check if user_id is set in the session
-if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
@@ -47,10 +39,9 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../Public/css/style_admin.css">
-    <title>Admin Dashboard</title>
-<style>
-       /* General Body Styling */
-       body {
+    <style>
+        /* General Body Styling */
+        body {
             display: flex;
             background-color: #f4f7fa;
             font-family: Arial, sans-serif;
@@ -173,6 +164,7 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
 <body>
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
+    <nav class="sidebar">
         <header>
             <div class="image-text">
                 <span class="image">
@@ -187,11 +179,13 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <ul class="menu-links">
             <li class="nav-link">
                 <a href="./admin_management.php">
+                    <i class='bx bx-user-circle icon'></i>
                     <span class="text nav-text">Admin Management</span>
                 </a>
             </li>
             <li class="nav-link">
                 <a href="./user_management.php">
+                    <i class='bx bx-user-check icon'></i>
                     <span class="text nav-text">User Management</span>
                 </a>
             </li>
@@ -200,6 +194,7 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <div class="bottom-content">
             <form method="POST" action="">
                 <button type="submit" name="logout" style="width:100%; padding: 10px; background: none; border: none; color: #cbd5e1;">
+                    <i class='bx bx-log-out icon'></i>
                     <span class="text nav-text">Logout</span>
                 </button>
             </form>
@@ -209,7 +204,49 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
     <!-- Main Content -->
     <section class="home">
         <h2>Welcome to Admin Dashboard</h2>
+        <h2>Welcome to Admin Dashboard</h2>
         <p>Use the sidebar to manage users and admins.</p>
+
+        <!-- Dashboard Statistics -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p><?php echo $totalUsers; ?></p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Goals</h3>
+                <p><?php echo $activeGoals; ?></p>
+            </div>
+            <div class="stat-card">
+                <h3>Workouts Today</h3>
+                <p><?php echo $workoutsToday; ?></p>
+            </div>
+        </div>
+
+        <!-- Recent User Activities -->
+        <div class="recent-activities">
+            <h2>Recent User Activities</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Exercise Type</th>
+                        <th>Duration (min)</th>
+                        <th>Log Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($activity = $recentActivitiesResult->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($activity['username']); ?></td>
+                        <td><?php echo htmlspecialchars($activity['exercise_type']); ?></td>
+                        <td><?php echo htmlspecialchars($activity['duration']); ?></td>
+                        <td><?php echo htmlspecialchars($activity['log_date']); ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Dashboard Statistics -->
         <div class="dashboard-stats">

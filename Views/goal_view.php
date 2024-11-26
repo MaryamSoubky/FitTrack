@@ -67,22 +67,20 @@
   </style>
 </head>
 <body>
-  
-  <!-- Include Navbar -->
-  <?php include 'Partials/navbar.php';?>
-
-  <h1></h1>
-
-  <!-- Goal Creation Form -->
-  <section class="goal-form">
-    <h2>Set a New Goal</h2>
-    <form id="goalForm">
-      <label for="goalType">Goal Type:</label>
-      <select id="goalType" name="goalType" required>
-        <option value="weight_loss">Weight Loss</option>
-        <option value="strength_gain">Strength Gain</option>
-        <option value="endurance">Endurance</option>
-      </select>
+    <?php include 'Partials/navbar.php';?>
+    <main class="container">
+        <section class="goal-setting-card">
+            <hgroup>
+                <h2>Set Your Fitness Goal</h2>
+                <h3>Stay motivated and track your progress</h3>
+            </hgroup>
+            <form action="../goalHandler.php" method="POST">
+                <label for="goalType">Goal Type:</label>
+                <select id="goalType" name="goalType" required>
+                    <option value="weightLoss">Weight Loss</option>
+                    <option value="strengthGain">Strength Gain</option>
+                    <option value="endurance">Endurance</option>
+                </select>
 
       <label for="targetValue">Target Value:</label>
       <input type="number" id="targetValue" name="targetValue" placeholder="e.g., 5 kg" required>
@@ -93,62 +91,36 @@
       <label for="endDate">End Date:</label>
       <input type="date" id="endDate" name="endDate" required>
 
-      <button type="submit">Set Goal</button>
-    </form>
-  </section>
+                <button type="submit" class="button-primary">Set Goal</button>
+            </form>
 
-  <!-- Current Goals and Progress Tracker -->
-  <section class="current-goals">
-    <h2>Current Goals</h2>
-    <div class="goal-list" id="goalList">
-      <!-- JavaScript will inject goal cards here -->
-    </div>
-  </section>
+            <div class="progress-container">
+                <div class="progress-circle">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="progress-text">60%</div> <!-- Adjust dynamically based on progress -->
+            </div>
 
-  <script>
-    // JavaScript to handle form submission and dynamically update goal list
+            <p class="motivational-quote">"Every workout is progress!"</p>
+            <p id="confirmation-message" style="display:none; color: green;">Goal successfully set!</p>
+        </section>  
+    </main>
+    <?php include 'Partials/footer.php';?>
+    <script src="../public/js/goal.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            const confirmationMessage = document.getElementById("confirmation-message");
 
-    const goalForm = document.getElementById('goalForm');
-    const goalList = document.getElementById('goalList');
-
-    // Sample data for demonstration
-    const goals = [
-      { type: 'Weight Loss', target: '5 kg', progress: '2 kg', progressPercentage: 40 },
-    ];
-
-    function renderGoals() {
-      goalList.innerHTML = '';
-      goals.forEach(goal => {
-        const goalCard = document.createElement('div');
-        goalCard.className = 'goal-card';
-        goalCard.innerHTML = `
-          <h3>${goal.type}</h3>
-          <p>Target: ${goal.target}</p>
-          <p>Progress: ${goal.progress}</p>
-          <div class="progress-bar">
-            <div class="progress" style="width: ${goal.progressPercentage}%"></div>
-          </div>
-        `;
-        goalList.appendChild(goalCard);
-      });
-    }
-
-    goalForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const type = document.getElementById('goalType').value;
-      const target = document.getElementById('targetValue').value;
-      const newGoal = {
-        type: type.charAt(0).toUpperCase() + type.slice(1).replace('_', ' '),
-        target: target + (type === 'weight_loss' ? ' kg' : ''),
-        progress: '0 kg',
-        progressPercentage: 0,
-      };
-      goals.push(newGoal);
-      renderGoals();
-      goalForm.reset();
-    });
-
-    renderGoals(); // Initial render with sample data
-  </script>
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                setTimeout(() => {
+                    confirmationMessage.style.display = "block";
+                    form.reset();
+                    setTimeout(() => confirmationMessage.style.display = "none", 3000);
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>

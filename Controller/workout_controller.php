@@ -51,6 +51,13 @@ class WorkoutController {
 
     public function showWorkouts() {
         return $this->model->getWorkouts();
+            // Add workout to the database
+            if ($this->model->addWorkout($exercise, $duration, $intensity, $frequency, $notes)) {
+                header("Location: workoutSuccess.php");
+            } else {
+                echo "Failed to log the workout. Please try again.";
+            }
+
     }
 }
 ?>

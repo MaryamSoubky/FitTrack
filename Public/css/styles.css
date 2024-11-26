@@ -1,0 +1,120 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    margin-bottom: 0.5rem;
+    color: #007BFF;
+}
+
+p {
+    line-height: 1.6;
+}
+
+a {
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Navigation Styles */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+
+/* Section Styles */
+section {
+    margin-bottom: 2.5rem;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid Layout */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+/* Chart and Figure Styling */
+figure {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+figure canvas {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Reminders Styling */
+.reminder-list {
+    padding-left: 1.5rem;
+    list-style-type: square;
+}
+
+.reminder-list li {
+    margin-bottom: 1rem;
+}
+
+.btn-reminder {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-reminder:hover {
+    background-color: #0056b3;
+}
+
+/* Social Sharing Button */
+.btn-share {
+    background-color: #28a745;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-share:hover {
+    background-color: #218838;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: #007BFF;
+    color: #fff;
+}
+
+footer small a {
+    color: #fff;
+}
+
+footer small a:hover {
+    text-decoration: underline;
+}

@@ -1,7 +1,6 @@
 
 <?php
 require_once '../config.php';
-include_once '../Models/Permission_Model.php';
 
 // Fetch all permissions
 function getPermissions($db) {

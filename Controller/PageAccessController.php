@@ -1,6 +1,6 @@
 <?php
 
- require_once 'config.php';
+ require_once '../config.php';
  require_once '../Models/PageAccess_Model.php';
 
 // Fetch all pages
