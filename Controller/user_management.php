@@ -73,7 +73,7 @@ $userTypesResult = $conn->query("SELECT user_type_id, user_type_name FROM User_T
 <head>
     <meta charset="UTF-8">
     <title>User Management</title>
-    <link rel="stylesheet" href="../Public/css/style_user_management.css">
+    <link rel="stylesheet" href="../Views/css/style_admin.css">
 </head>
 <body>
     <section class="home">
