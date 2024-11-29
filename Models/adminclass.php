@@ -1,6 +1,6 @@
 <?php
 // Include the admin management controller
-include_once '../Controller/admin_management.php'; // Add a semicolon here
+include_once '../Controllers/admin_management.php'; // Add a semicolon here
 
 class AdminManagement {
 

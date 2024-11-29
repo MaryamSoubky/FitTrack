@@ -1,8 +1,7 @@
 <?php
 
-include_once '../models/GoalModel.php';
-include_once './dbconfiq.php';
-include_once './config.php';
+include_once '../Models/GoalModel.php';
+include_once '../config.php';
 
 
 class GoalController {

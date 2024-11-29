@@ -38,6 +38,7 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../Public/css/style_admin.css">
     <style>
         /* General Body Styling */
@@ -164,10 +165,10 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
 <body>
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
-    <nav class="sidebar">
         <header>
             <div class="image-text">
                 <span class="image">
+                    <img src="photos/download (1).png" alt="logo">
                 </span>
                 <div class="text logo-text">
                     <span class="name">Admin Panel</span>
@@ -204,49 +205,7 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
     <!-- Main Content -->
     <section class="home">
         <h2>Welcome to Admin Dashboard</h2>
-        <h2>Welcome to Admin Dashboard</h2>
         <p>Use the sidebar to manage users and admins.</p>
-
-        <!-- Dashboard Statistics -->
-        <div class="dashboard-stats">
-            <div class="stat-card">
-                <h3>Total Users</h3>
-                <p><?php echo $totalUsers; ?></p>
-            </div>
-            <div class="stat-card">
-                <h3>Active Goals</h3>
-                <p><?php echo $activeGoals; ?></p>
-            </div>
-            <div class="stat-card">
-                <h3>Workouts Today</h3>
-                <p><?php echo $workoutsToday; ?></p>
-            </div>
-        </div>
-
-        <!-- Recent User Activities -->
-        <div class="recent-activities">
-            <h2>Recent User Activities</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Exercise Type</th>
-                        <th>Duration (min)</th>
-                        <th>Log Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($activity = $recentActivitiesResult->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($activity['username']); ?></td>
-                        <td><?php echo htmlspecialchars($activity['exercise_type']); ?></td>
-                        <td><?php echo htmlspecialchars($activity['duration']); ?></td>
-                        <td><?php echo htmlspecialchars($activity['log_date']); ?></td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
 
         <!-- Dashboard Statistics -->
         <div class="dashboard-stats">

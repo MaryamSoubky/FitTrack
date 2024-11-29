@@ -1,5 +1,5 @@
 <?php
-include '../Controller/config.php';  // Adjust the path as necessary
+include '../config.php';  // Adjust the path as necessary
 
 class WorkoutModel {
     private $db;
