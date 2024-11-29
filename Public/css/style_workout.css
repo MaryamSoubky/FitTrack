@@ -1,60 +1,19 @@
-/* Public/css/style_workout.css */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #03045E;
-    margin: 0;
-    padding: 20px;
+    background-color: #f8f9fa;
 }
 
-h1 {
+h2 {
     color: #343a40;
-    text-align: center;
 }
 
-form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: 0 auto;
+.alert {
+    margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    margin: 10px 0 5px;
+.footer {
+    padding: 20px 0;
 }
 
-input[type="text"],
-input[type="number"],
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-
-button {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.error {
-    color: red;
-    text-align: center;
-}
-
-.success {
-    color: green;
-    text-align: center;
+.footer p {
+    margin: 0;
 }

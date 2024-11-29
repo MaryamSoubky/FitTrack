@@ -1,5 +1,5 @@
 <?php
-include '../Controller/config.php';
+include '../config.php';
 
 class Admin_Model {
     private $admin_id;

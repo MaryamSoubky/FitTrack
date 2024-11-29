@@ -1,6 +1,6 @@
 <?php 
 // Include the database connection from config.php
-include_once 'config.php';  // Adjust path if necessary
+include_once '../config.php';  // Adjust path if necessary
 
 session_start();
 

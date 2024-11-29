@@ -1,6 +1,6 @@
 <?php
 // index_model.php
-include_once '../Controller/config.php';
+include_once '../config.php';
 
 function handleSignUp($data) {
     global $conn;

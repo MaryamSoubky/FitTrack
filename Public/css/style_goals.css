@@ -1,62 +1,91 @@
+/* Base Styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-}
-
-h1 {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9fafb;
     color: #333;
+    line-height: 1.6;
 }
 
-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+/* Goal Setting Card */
+.goal-setting-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 2rem auto;
 }
 
-label {
-    display: block;
-    margin: 10px 0 5px;
+.goal-setting-card h2 {
+    color: #1abc9c;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-button {
+.goal-setting-card h3 {
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+
+input[type="number"], input[type="date"], select {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 0.75rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    background-color: #ecf0f1;
 }
 
-button {
-    background-color: #28a745;
+.button-primary {
+    background-color: #1abc9c;
     color: #fff;
+    padding: 0.75rem 1.5rem;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
-    background-color: #218838;
+.button-primary:hover {
+    background-color: #16a085;
 }
 
-h2 {
-    margin-top: 30px;
+/* Progress Dashboard */
+.progress-dashboard {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 600px;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+.metrics {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
 }
 
-li {
-    background: #fff;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+.metric h3 {
+    color: #3498db;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Analytics Section */
+.analytics {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+    .metrics {
+        flex-direction: column;
+        align-items: center;
+    }
 }

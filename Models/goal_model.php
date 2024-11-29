@@ -1,12 +1,10 @@
 <?php
     
-include '../Controller/config.php'; 
-
+include '../config.php'; 
 class GoalModel {
     private $db;
 
     public function __construct($dbConnection) {
-        $this->db = $dbConnection;
         $this->db = $dbConnection;
     }
 
@@ -20,7 +18,6 @@ class GoalModel {
         $stmt = $this->db->prepare("SELECT * FROM goals WHERE user_id = ? ORDER BY created_at DESC");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 

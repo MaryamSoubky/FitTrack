@@ -1,5 +1,5 @@
 <?php
-include '../Controller/config.php';
+include '../config.php';
 
 class Page_Model {
     private $page_id;
