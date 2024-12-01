@@ -10,24 +10,44 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Fetch admin statistics
+// Initialize variables
 $totalUsers = $activeGoals = $workoutsToday = 0;
 $admin_id = $_SESSION['user_id'];
-$statsQuery = "SELECT total_users, active_goals, workout_logs_today FROM Admin_Dashboard_Stats WHERE admin_id = ?";
+
+// Fetch total users count
+$totalUsersQuery = "SELECT COUNT(*) FROM users";
+$totalUsersResult = $conn->query($totalUsersQuery);
+if ($totalUsersResult) {
+    $totalUsers = $totalUsersResult->fetch_row()[0]; // Get the first column of the first row
+} else {
+    die("Error fetching total users: " . $conn->error);
+}
+
+// Fetch admin statistics
+$statsQuery = "SELECT active_goals, workout_logs_today FROM Admin_Dashboard_Stats WHERE admin_id = ?";
 $stmt = $conn->prepare($statsQuery);
 $stmt->bind_param("i", $admin_id);
-$stmt->execute();
-$stmt->bind_result($totalUsers, $activeGoals, $workoutsToday);
-$stmt->fetch();
+
+if (!$stmt->execute()) {
+    die("Error executing query: " . $stmt->error);
+}
+
+$stmt->bind_result($activeGoals, $workoutsToday);
+if (!$stmt->fetch()) {
+    die("Error fetching results: " . $stmt->error);
+}
 $stmt->close();
 
 // Fetch recent user activities
 $recentActivitiesQuery = "SELECT u.username, w.exercise_type, w.duration, w.log_date 
                           FROM Workout_Log w 
-                          JOIN Users u ON w.user_id = u.user_id 
+                          JOIN Users u ON w.user_id = u.id 
                           ORDER BY w.log_date DESC 
                           LIMIT 5";
 $recentActivitiesResult = $conn->query($recentActivitiesQuery);
+if (!$recentActivitiesResult) {
+    die("Error fetching recent activities: " . $conn->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -120,15 +140,15 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <div class="dashboard-stats">
             <div class="stat-card">
                 <h3>Total Users</h3>
-                <p><?php echo $totalUsers; ?></p>
+                <p><?php echo htmlspecialchars($totalUsers); ?></p>
             </div>
             <div class="stat-card">
                 <h3>Active Goals</h3>
-                <p><?php echo $activeGoals; ?></p>
+                <p><?php echo htmlspecialchars($activeGoals); ?></p>
             </div>
             <div class="stat-card">
                 <h3>Workouts Today</h3>
-                <p><?php echo $workoutsToday; ?></p>
+                <p><?php echo htmlspecialchars($workoutsToday); ?></p>
             </div>
         </div>
 
