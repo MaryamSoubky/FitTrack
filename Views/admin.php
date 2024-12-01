@@ -3,8 +3,10 @@
 include_once 'config.php';
 include_once '../Models/adminclass.php';
 
-
-session_start();
+// Start the session only if it's not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Handle logout
 if (isset($_POST['logout'])) {
@@ -13,15 +15,27 @@ if (isset($_POST['logout'])) {
     exit();
 }
 
-// Fetch statistics for the admin dashboard
+// Check if user_id is set in the session
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+// Initialize variables for dashboard stats
 $admin_id = $_SESSION['user_id'];
 $totalUsers = $activeGoals = $workoutsToday = 0;
 
-$query = "SELECT total_users, active_goals, workout_logs_today FROM Admin_Dashboard_Stats WHERE admin_id = ?";
+// Fetch total users directly from Users table
+$totalUsersQuery = "SELECT COUNT(*) FROM Users";
+$result = $conn->query($totalUsersQuery);
+$totalUsers = $result->fetch_row()[0];
+
+// Fetch statistics for the admin dashboard from Admin_Dashboard_Stats
+$query = "SELECT active_goals, workout_logs_today FROM Admin_Dashboard_Stats WHERE admin_id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $admin_id);
 $stmt->execute();
-$stmt->bind_result($totalUsers, $activeGoals, $workoutsToday);
+$stmt->bind_result($activeGoals, $workoutsToday);
 $stmt->fetch();
 $stmt->close();
 
@@ -38,11 +52,11 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../Public/css/style_admin.css">
+    <title>Admin Dashboard</title>
     <style>
-        /* General Body Styling */
-        body {
+       /* General Body Styling */
+       body {
             display: flex;
             background-color: #f4f7fa;
             font-family: Arial, sans-serif;
@@ -168,7 +182,6 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <header>
             <div class="image-text">
                 <span class="image">
-                    <img src="photos/download (1).png" alt="logo">
                 </span>
                 <div class="text logo-text">
                     <span class="name">Admin Panel</span>
@@ -180,13 +193,11 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <ul class="menu-links">
             <li class="nav-link">
                 <a href="./admin_management.php">
-                    <i class='bx bx-user-circle icon'></i>
                     <span class="text nav-text">Admin Management</span>
                 </a>
             </li>
             <li class="nav-link">
                 <a href="./user_management.php">
-                    <i class='bx bx-user-check icon'></i>
                     <span class="text nav-text">User Management</span>
                 </a>
             </li>
@@ -195,7 +206,6 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
         <div class="bottom-content">
             <form method="POST" action="">
                 <button type="submit" name="logout" style="width:100%; padding: 10px; background: none; border: none; color: #cbd5e1;">
-                    <i class='bx bx-log-out icon'></i>
                     <span class="text nav-text">Logout</span>
                 </button>
             </form>

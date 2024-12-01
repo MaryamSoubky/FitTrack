@@ -46,18 +46,18 @@ if (isset($_POST['deleteAdmin'])) {
     $stmt->close();
 }
 
-// Fetch admins and users for selection
-$adminsResult = $conn->query("SELECT a.admin_id, u.username, u.email, a.access_level, a.created_at 
+// Fetch admins for selection
+$adminsResult = $conn->query("SELECT admin_id, u.username, u.email, a.access_level, a.created_at 
                               FROM Admins a JOIN Users u ON a.user_id = u.user_id");
-$usersResult = $conn->query("SELECT user_id, username FROM Users");
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../Public/css/style_admin_management.css">
+
     <title>Admin Management</title>
-    <link rel="stylesheet" href="../Views/css/style_admin.css">
     <style>
         .section-header { font-size: 1.5em; margin-bottom: 10px; }
         form { margin-bottom: 20px; }
@@ -73,7 +73,10 @@ $usersResult = $conn->query("SELECT user_id, username FROM Users");
             <!-- Select user to assign admin role -->
             <select name="user_id" required>
                 <option value="">Select User</option>
-                <?php while ($user = $usersResult->fetch_assoc()): ?>
+                <?php 
+                // Fetch all users to assign as admin
+                $usersResult = $conn->query("SELECT user_id, username FROM Users");
+                while ($user = $usersResult->fetch_assoc()): ?>
                     <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
                 <?php endwhile; ?>
             </select>
