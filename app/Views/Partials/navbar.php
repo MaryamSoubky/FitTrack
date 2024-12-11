@@ -126,7 +126,7 @@
                 <a href="../Views/workouts.php" class="nav-link smoothScroll">Workouts</a>
               </li>
               <li class="nav-item">
-                <a href="../Views/schedules.php" class="nav-link smoothScroll">Schedule</a>
+                <a href="../Views/schedules.php" class="nav-link smoothScroll">Tracking Feature</a>
               </li>
               <li class="nav-item">
                 <a href="../Views/contact.php" class="nav-link smoothScroll">Contact Us</a>
