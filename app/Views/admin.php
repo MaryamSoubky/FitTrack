@@ -201,6 +201,11 @@ $recentActivitiesResult = $conn->query($recentActivitiesQuery);
                     <span class="text nav-text">User Management</span>
                 </a>
             </li>
+            <li class="nav-link">
+                <a href="../Views/reports.php">
+                    <span class="text nav-text">reports </span>
+                </a>
+            </li>
         </ul>
 
         <div class="bottom-content">

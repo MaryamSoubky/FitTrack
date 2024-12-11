@@ -12,7 +12,7 @@ if (isset($_POST['addUser'])) {
     $confirmPassword = trim($_POST['confirmPassword']);
     $role_id = trim($_POST['role_id']);
     $user_type_id = trim($_POST['user_type_id']);
- 
+
     if ($password === $confirmPassword) {
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $conn->prepare("INSERT INTO Users (username, email, password_hash, role_id, user_type_id) VALUES (?, ?, ?, ?, ?)");
@@ -60,8 +60,9 @@ if (isset($_POST['deleteUser'])) {
     $stmt->close();
 }
 
-// Fetch users from database for display
+// Fetch users and pages for display
 $usersResult = $conn->query("SELECT user_id, username, email, role_id, user_type_id FROM Users");
+$pagesResult = $conn->query("SELECT page_id, page_name FROM Pages");
 
 // Fetch roles and user types for dropdowns
 $rolesResult = $conn->query("SELECT role_id, role_name FROM Roles");
@@ -73,7 +74,8 @@ $userTypesResult = $conn->query("SELECT user_type_id, user_type_name FROM User_T
 <head>
     <meta charset="UTF-8">
     <title>User Management</title>
-    <link rel="stylesheet" href="../Views/css/style_admin.css">
+    <link rel="stylesheet" href="../Public/css/style_user_management.css">
+    <link rel="stylesheet" href="../Public/css/drag_drop.css">
 </head>
 <body>
     <section class="home">
@@ -140,10 +142,39 @@ $userTypesResult = $conn->query("SELECT user_type_id, user_type_name FROM User_T
             <button type="submit" name="deleteUser">Delete User</button>
         </form>
 
+        <h3>Assign Page Access (Without Saving)</h3>
+        <select name="userId" required>
+            <option value="">Select User</option>
+            <?php $usersResult->data_seek(0); // Reset users result pointer ?>
+            <?php while ($user = $usersResult->fetch_assoc()): ?>
+                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?> (<?php echo $user['email']; ?>)</option>
+            <?php endwhile; ?>
+        </select>
+
+        <div class="access-container">
+            <div class="available-pages">
+                <h4>Available Pages</h4>
+                <ul id="availablePages" class="draggable-list">
+                    <?php while ($page = $pagesResult->fetch_assoc()): ?>
+                        <li data-page-id="<?php echo $page['page_id']; ?>" draggable="true"><?php echo $page['page_name']; ?></li>
+                    <?php endwhile; ?>
+                </ul>
+            </div>
+
+            <div class="assigned-pages">
+                <h4>Assigned Pages</h4>
+                <ul id="assignedPages" class="draggable-list">
+                    <!-- Assigned pages will appear here after drag-and-drop -->
+                </ul>
+            </div>
+        </div>
+
         <!-- Back Button -->
         <form action="admin.php" method="get">
             <button type="submit">Back to Admin Dashboard</button>
         </form>
     </section>
+
+    <script src="../Public/js/drag_drop.js"></script>
 </body>
 </html>
