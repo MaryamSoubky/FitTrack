@@ -1,5 +1,5 @@
 <?php
-include '../config.php';
+include '../db/config.php';
 
 class PageAccess_Model {
     private $page_id;
@@ -46,6 +46,23 @@ class PageAccess_Model {
         $stmt->bindParam(":page_id", $page_id);
         $stmt->bindParam(":permission_id", $permission_id);
         return $stmt->execute();
+    }
+    
+    // Additional method to check if a user has access to a specific page
+    public static function hasAccess($userTypeId, $urlPath, $db) {
+        // Fetch the page_id based on the URL path
+        $query = "SELECT page_id FROM Pages WHERE url_path = :url_path";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(":url_path", $urlPath);
+        $stmt->execute();
+        $page = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($page) {
+            // Check if access exists for the user type and page
+            return self::getAccessByIds($page['page_id'], $userTypeId, $db) !== null;
+        }
+        
+        return false; // Page not found
     }
 }
 ?>
