@@ -1,9 +1,7 @@
 <?php
-
 session_start();
-
 include_once '../Controller/PageAccessController.php';
-
+checkSubscriptionStatus();
 ?>
 
 <!DOCTYPE html>
@@ -19,9 +17,7 @@ include_once '../Controller/PageAccessController.php';
     <link rel="stylesheet" href="../Public/css/font-awesome.min.css">
     <link rel="stylesheet" href="../Public/css/aos.css">
     <link rel="stylesheet" href="../Public/css/main.css">
-    <link rel="stylesheet" href="../Public/css/style.css">
-
-    
+    <link rel="stylesheet" href="../Public/css/style_form.css">
 </head>
 
 <body>
@@ -36,7 +32,6 @@ include_once '../Controller/PageAccessController.php';
                         <div class="hero-text mt-5 text-center">
                             <h6 data-aos="fade-up" data-aos-delay="300">New way to build a healthy lifestyle!</h6>
                             <h1 class="text-white" data-aos="fade-up" data-aos-delay="500">Improve your body with FitTrack</h1>
-                            <a href="classes.php" class="btn custom-btn mt-3" data-aos="fade-up" data-aos-delay="600">Get started</a>
                             <a href="about.php" class="btn custom-btn bordered mt-3" data-aos="fade-up" data-aos-delay="700">Learn more</a>
                         </div>
                     </div>
@@ -44,7 +39,6 @@ include_once '../Controller/PageAccessController.php';
             </div>
         </div>
     </section>
-
 
     <section class="feature" id="feature">
         <div class="container">
@@ -67,8 +61,7 @@ include_once '../Controller/PageAccessController.php';
 
                             <strong class="d-block" data-aos="fade-up" data-aos-delay="600">Sunday : Closed</strong>
 
-                            <strong class="mt-3 d-block" data-aos="fade-up" data-aos-delay="700">Monday -
-                                Friday</strong>
+                            <strong class="mt-3 d-block" data-aos="fade-up" data-aos-delay="700">Monday - Friday</strong>
 
                             <p data-aos="fade-up" data-aos-delay="800">7:00 AM - 10:00 PM</p>
 
@@ -82,150 +75,148 @@ include_once '../Controller/PageAccessController.php';
         </div>
     </section>
 
-
-
     <section class="about section" id="about">
-               <div class="container">
-                    <div class="row">
-                         <div class="mt-lg-5 mb-lg-0 mb-4 col-lg-5 col-md-10 mx-auto col-12">
-                              <h2 class="mb-4" data-aos="fade-up" data-aos-delay="300">Hello, we are FitTrack</h2>
-                              <p data-aos="fade-up" data-aos-delay="400">FitTrack is a fitness tracker and goal management platform designed to help users stay on top of their health and fitness objectives. It allows users to monitor their workouts, track progress, and set personalized fitness goals. The platform offers features such as schedule management, workout logging, and progress tracking, providing users with the tools to achieve their fitness milestones efficiently.</p>
-                              <p data-aos="fade-up" data-aos-delay="500">If you have any inquiries regarding FitTrack, you can <a rel="nofollow" href="contact.php" target="_parent">contact us</a> immediately. Thank you.</p>
-                         </div>
-                         <div class="ml-lg-auto col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="700">
-                              <div class="team-thumb">
-                                   <img src="../Public/images/team/team-image.jpg" class="img-fluid" alt="Trainer">
-                                   <div class="team-info d-flex flex-column">
-                                        <h3>Mary Yan</h3>
-                                        <span>Yoga Instructor</span>
-                                        <ul class="social-icon mt-3">
-                                             <li><a href="#" class="fa fa-twitter"></a></li>
-                                             <li><a href="#" class="fa fa-instagram"></a></li>
-                                        </ul>
-                                   </div>
-                              </div>
-                         </div>
-                    <div class="mr-lg-auto mt-5 mt-lg-0 mt-md-0 col-lg-3 col-md-6 col-12" data-aos="fade-up"
-                    data-aos-delay="800">
-                         <div class="team-thumb">
-                              <img src="../Public/images/team/team-image01.jpg" class="img-fluid" alt="Trainer">
-                              <div class="team-info d-flex flex-column">
-                                   <h3>Catherina</h3>
-                                   <span>Body trainer</span>
-                                   <ul class="social-icon mt-3">
-                                        <li><a href="#" class="fa fa-instagram"></a></li>
-                                        <li><a href="#" class="fa fa-facebook"></a></li>
-                                   </ul>
-                              </div>
-                         </div>
+        <div class="container">
+            <div class="row">
+                <div class="mt-lg-5 mb-lg-0 mb-4 col-lg-5 col-md-10 mx-auto col-12">
+                    <h2 class="mb-4" data-aos="fade-up" data-aos-delay="300">Hello, we are FitTrack</h2>
+                    <p data-aos="fade-up" data-aos-delay="400">FitTrack is a fitness tracker and goal management platform designed to help users stay on top of their health and fitness objectives. It allows users to monitor their workouts, track progress, and set personalized fitness goals. The platform offers features such as schedule management, workout logging, and progress tracking, providing users with the tools to achieve their fitness milestones efficiently.</p>
+                    <p data-aos="fade-up" data-aos-delay="500">If you have any inquiries regarding FitTrack, you can <a rel="nofollow" href="contact.php" target="_parent">contact us</a> immediately. Thank you.</p>
+                </div>
+                <div class="ml-lg-auto col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="700">
+                    <div class="team-thumb">
+                        <img src="../Public/images/team/team-image.jpg" class="img-fluid" alt="Trainer">
+                        <div class="team-info d-flex flex-column">
+                            <h3>Mary Yan</h3>
+                            <span>Yoga Instructor</span>
+                            <ul class="social-icon mt-3">
+                                <li><a href="#" class="fa fa-twitter"></a></li>
+                                <li><a href="#" class="fa fa-instagram"></a></li>
+                            </ul>
+                        </div>
                     </div>
-               </div>
-          </section> 
-          <section class="schedule section" id="schedule">
-               <div class="container">
-                    <div class="row">
-                         <div class="col-lg-12 col-12 text-center">
-                              <h6 data-aos="fade-up">our weekly GYM schedules</h6>
-                              <h2 class="text-white" data-aos="fade-up" data-aos-delay="200">Workout Timetable</h2>
-                         </div>
-                         <div class="col-lg-12 py-5 col-md-12 col-12">
-                              <table class="table table-bordered table-responsive schedule-table" data-aos="fade-up"
-                                  data-aos-delay="300">
-                                  <thead class="thead-light">
-                                      <th><i class="fa fa-calendar"></i></th>
-                                      <th>Mon</th>
-                                      <th>Tue</th>
-                                      <th>Wed</th>
-                                      <th>Thu</th>
-                                      <th>Fri</th>
-                                      <th>Sat</th>
-                                  </thead>
-
-                                  <tbody>
-                                      <tr>
-                                          <td><small>7:00 am</small></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                          <td>
-                                              <strong>Power Fitness</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                          <td></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Yoga Section</strong>
-                                              <span>7:00 am - 9:00 am</span>
-                                          </td>
-                                      </tr>
-
-                                      <tr>
-                                          <td><small>9:00 am</small></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                          <td>
-                                              <strong>Areobic</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>8:00 am - 9:00 am</span>
-                                          </td>
-                                      </tr>
-
-                                      <tr>
-                                          <td><small>11:00 am</small></td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>11:00 am - 2:00 pm</span>
-                                          </td>
-                                          <td>
-                                              <strong>Areobic</strong>
-                                              <span>11:30 am - 3:30 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Body work</strong>
-                                              <span>11:50 am - 5:20 pm</span>
-                                          </td>
-                                      </tr>
-
-                                      <tr>
-                                          <td><small>2:00 pm</small></td>
-                                          <td>
-                                              <strong>Boxing</strong>
-                                              <span>2:00 pm - 4:00 pm</span>
-                                          </td>
-                                          <td>
-                                              <strong>Power lifting</strong>
-                                              <span>3:00 pm - 6:00 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Cardio</strong>
-                                              <span>6:00 pm - 9:00 pm</span>
-                                          </td>
-                                          <td></td>
-                                          <td>
-                                              <strong>Crossfit</strong>
-                                              <span>5:00 pm - 7:00 pm</span>
-                                          </td>
-                                        </tr>
-                                   </tbody>
-                              </table>
-                         </div>
-                         <button>Edit Schedule</button>
+                </div>
+                <div class="mr-lg-auto mt-5 mt-lg-0 mt-md-0 col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="800">
+                    <div class="team-thumb">
+                        <img src="../Public/images/team/team-image01.jpg" class="img-fluid" alt="Trainer">
+                        <div class="team-info d-flex flex-column">
+                            <h3>Catherina</h3>
+                            <span>Body trainer</span>
+                            <ul class="social-icon mt-3">
+                                <li><a href="#" class="fa fa-instagram"></a></li>
+                                <li><a href="#" class="fa fa-facebook"></a></li>
+                            </ul>
+                        </div>
                     </div>
-               </div>
-          </section>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section class="schedule section" id="schedule">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-12 text-center">
+                    <h6 data-aos="fade-up">our weekly GYM schedules</h6>
+                    <h2 class="text-white" data-aos="fade-up" data-aos-delay="200">Workout Timetable</h2>
+                </div>
+                <div class="col-lg-12 py-5 col-md-12 col-12">
+                    <table class="table table-bordered table-responsive schedule-table" data-aos="fade-up"
+                        data-aos-delay="300">
+                        <thead class="thead-light">
+                            <th><i class="fa fa-calendar"></i></th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td><small>7:00 am</small></td>
+                                <td>
+                                    <strong>Cardio</strong>
+                                    <span>7:00 am - 9:00 am</span>
+                                </td>
+                                <td>
+                                    <strong>Power Fitness</strong>
+                                    <span>7:00 am - 9:00 am</span>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <strong>Yoga Section</strong>
+                                    <span>7:00 am - 9:00 am</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><small>9:00 am</small></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <strong>Boxing</strong>
+                                    <span>8:00 am - 9:00 am</span>
+                                </td>
+                                <td>
+                                    <strong>Areobic</strong>
+                                    <span>8:00 am - 9:00 am</span>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <strong>Cardio</strong>
+                                    <span>8:00 am - 9:00 am</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><small>11:00 am</small></td>
+                                <td></td>
+                                <td>
+                                    <strong>Boxing</strong>
+                                    <span>11:00 am - 2:00 pm</span>
+                                </td>
+                                <td>
+                                    <strong>Areobic</strong>
+                                    <span>11:30 am - 3:30 pm</span>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <strong>Body work</strong>
+                                    <span>11:50 am - 5:20 pm</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><small>2:00 pm</small></td>
+                                <td>
+                                    <strong>Boxing</strong>
+                                    <span>2:00 pm - 4:00 pm</span>
+                                </td>
+                                <td>
+                                    <strong>Power lifting</strong>
+                                    <span>3:00 pm - 6:00 pm</span>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <strong>Cardio</strong>
+                                    <span>6:00 pm - 9:00 pm</span>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <strong>Crossfit</strong>
+                                    <span>5:00 pm - 7:00 pm</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button>Edit Schedule</button>
+            </div>
+        </div>
+    </section>
 
     <?php include 'Partials/footer.php';?>
 
@@ -242,31 +233,29 @@ include_once '../Controller/PageAccessController.php';
                 </div>
 
                 <div class="modal-body">
-                    <form class="membership-form webform" role="form">
-                        <input type="text" class="form-control" name="cf-name" placeholder="John Doe">
+                    <form action="../Controller/submit_subscription.php" method="POST">
+                        <label for="user_id">User ID:</label>
+                        <input type="text" name="user_id" id="user_id" required value="<?php echo $_SESSION['user_id']; ?>"><br>
 
-                        <input type="email" class="form-control" name="cf-email" placeholder="Johndoe@gmail.com">
+                        <label for="subscription_plan">Subscription Plan:</label>
+                        <select name="subscription_plan" id="subscription_plan" required>
+                            <option value="1_month">1 Month</option>
+                            <option value="3_month">3 Months</option>
+                            <option value="6_month">6 Months</option>
+                            <option value="1_year">1 Year</option>
+                        </select><br>
 
-                        <input type="tel" class="form-control" name="cf-phone" placeholder="123-456-7890"
-                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" name="start_date" id="start_date" required value="<?php echo date('Y-m-d'); ?>"><br>
 
-                        <textarea class="form-control" rows="3" name="cf-message"
-                            placeholder="Additional Message"></textarea>
+                        <label for="end_date">End Date:</label>
+                        <input type="date" name="end_date" id="end_date" required><br>
 
-                        <button type="submit" class="form-control" id="submit-button" name="submit">Submit
-                            Button</button>
-
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="signup-agree">
-                            <label class="custom-control-label text-small text-muted" for="signup-agree">I agree to the
-                                <a href="#">Terms &amp;Conditions</a>
-                            </label>
-                        </div>
+                        <input type="submit" value="Submit">
                     </form>
                 </div>
 
                 <div class="modal-footer"></div>
-
             </div>
         </div>
     </div>
@@ -277,7 +266,6 @@ include_once '../Controller/PageAccessController.php';
     <script src="../Public/js/aos.js"></script>
     <script src="../Public/js/smoothscroll.js"></script>
     <script src="../Public/js/custom.js"></script>
-
 </body>
 
 </html>

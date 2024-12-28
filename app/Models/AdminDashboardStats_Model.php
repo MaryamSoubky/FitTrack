@@ -1,5 +1,5 @@
 <?php
-include '../config.php';
+include '../Controller/config.php';
 
 class AdminDashboardStats_Model {
     private $stat_id;

@@ -1,9 +1,44 @@
 <?php
-
+// Start the session
 session_start();
 
-include_once '../Controller/PageAccessController.php';
+// Include the config.php to use the $conn database connection
+include_once '../Controller/config.php'; // Ensure the path is correct
 
+// Check if user is logged in and has an active membership
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+
+    // Debugging: Verify userId and check if session is set
+    echo "User ID: $userId<br>";
+
+    // Check the membership status of the user
+    $stmt = $conn->prepare("SELECT membership_status FROM Users WHERE user_id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($membershipStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Debugging: Verify fetched membership status
+    echo "Membership Status: $membershipStatus<br>";
+
+    // If the membership is not active (e.g., 'inactive'), redirect to home page with a message
+    if ($membershipStatus === 'inactive') {
+        echo "<script>
+            alert('You are not a member. Please subscribe to unlock features. You will now be redirected to the subscription page.');
+            window.location.href = 'home.php';
+        </script>";
+        exit();
+    }
+} else {
+    // If user is not logged in, redirect to home page with a message
+    echo "<script>
+        alert('You are not logged in. Please log in to access this page.');
+        window.location.href = 'home.php';
+    </script>";
+    exit();
+}
 ?>
 
 

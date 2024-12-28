@@ -1,59 +1,94 @@
 <?php
-include_once '../config.php';
 
-class ReportsModel {
-    private $conn;
+class Reports_Model
+{
+    private $db;
 
-    public function __construct($conn) {
-        $this->conn = $conn;
+    /**
+     * Constructor to initialize the database connection.
+     *
+     * @param mysqli $db The database connection instance.
+     */
+    public function __construct($db)
+    {
+        $this->db = $db;
     }
 
-    // Fetch workouts and goals for all users
-    public function getAllUsersReportData() {
-        // Fetch workouts for all users
-        $workoutsQuery = "SELECT 
-                              u.name AS user_name, 
-                              w.exercise_type, 
-                              w.duration, 
-                              w.intensity, 
-                              w.frequency, 
-                              w.log_date 
-                          FROM workout_log w
-                          JOIN users u ON w.user_id = u.user_id";
+    /**
+     * Fetch total users from the Users table.
+     *
+     * @return int The total number of users.
+     */
+    public function getTotalUsers()
+    {
+        $query = "SELECT COUNT(*) FROM Users";
+        $result = $this->db->query($query);
+        return $result->fetch_row()[0];
+    }
 
-        $workoutsResult = $this->conn->query($workoutsQuery);
-        $workouts = [];
-        if ($workoutsResult->num_rows > 0) {
-            while ($row = $workoutsResult->fetch_assoc()) {
-                $workouts[] = $row;
-            }
+    /**
+     * Fetch active goals count from the Goals table.
+     *
+     * @return int The count of active goals.
+     */
+    public function getActiveGoals()
+    {
+        $query = "SELECT COUNT(*) FROM Goals WHERE status = 'active'";
+        $result = $this->db->query($query);
+        return $result->fetch_row()[0];
+    }
+
+    /**
+     * Fetch workout logs for today.
+     *
+     * @param string $today The current date in "Y-m-d" format.
+     * @return int The count of workout logs for today.
+     */
+    public function getWorkoutsToday($today)
+    {
+        $query = "SELECT COUNT(*) FROM Workout_Log WHERE DATE(log_date) = '$today'";
+        $result = $this->db->query($query);
+        $data = $result->fetch_row();
+        return $data[0];
+    }
+
+    /**
+     * Fetch recent user activities (workout logs).
+     *
+     * @return mysqli_result The result set of recent activities.
+     */
+    public function getRecentActivities()
+    {
+        $query = "SELECT u.username, w.exercise_type, w.duration, w.log_date
+                  FROM Workout_Log w
+                  JOIN Users u ON w.user_id = u.user_id
+                  ORDER BY w.log_date DESC
+                  LIMIT 5";
+        return $this->db->query($query);
+    }
+
+    /**
+     * Fetch active goal details.
+     *
+     * @return array An array of active goal details.
+     */
+    public function getGoalDetails()
+    {
+        $query = "SELECT goal_type, target_value, start_date, end_date 
+                  FROM goals WHERE status = 'active'";
+        $result = $this->db->query($query);
+
+        $goalDetails = [];
+        while ($row = $result->fetch_assoc()) {
+            $goalDetails[] = [
+                'goal_type' => $row['goal_type'],
+                'target_value' => $row['target_value'],
+                'start_date' => $row['start_date'],
+                'end_date' => $row['end_date'],
+            ];
         }
 
-        // Fetch goals for all users
-        $goalsQuery = "SELECT 
-                           u.name AS user_name, 
-                           g.goal_type, 
-                           g.target_value, 
-                           g.current_value, 
-                           g.start_date, 
-                           g.end_date, 
-                           g.status 
-                       FROM goals g
-                       JOIN users u ON g.user_id = u.user_id";
-
-        $goalsResult = $this->conn->query($goalsQuery);
-        $goals = [];
-        if ($goalsResult->num_rows > 0) {
-            while ($row = $goalsResult->fetch_assoc()) {
-                $goals[] = $row;
-            }
-        }
-
-        // Return combined data
-        return [
-            'workouts' => $workouts,
-            'goals' => $goals
-        ];
+        return $goalDetails;
     }
 }
 ?>

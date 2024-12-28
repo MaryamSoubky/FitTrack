@@ -1,5 +1,5 @@
 <?php
-include '../config.php';
+include '../Controller/config.php';
 
 class Permission_Model {
     private $permission_id;
