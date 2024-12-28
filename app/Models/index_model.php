@@ -1,6 +1,6 @@
 <?php
 // Include the config.php to use the $conn database connection
-include_once '../Config/config.php';  // Make sure the path is correct
+include_once '../Config/config.php';  // Ensure the path is correct
 
 // Handle user sign-up
 function handleSignUp($data) {
@@ -30,7 +30,7 @@ function handleSignUp($data) {
     // If no errors, insert the new user into the database
     if (empty($errors)) {
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $conn->prepare("INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO Users (username, email, password_hash, membership_status) VALUES (?, ?, ?, 'none')");
         $stmt->bind_param("sss", $username, $email, $passwordHash);
 
         if (!$stmt->execute()) {
@@ -73,19 +73,8 @@ function handleSignIn($data) {
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['user_name'] = $userName;
 
-                // Check if the user is an admin
-                $adminCheckStmt = $conn->prepare("SELECT admin_id FROM Admins WHERE user_id = ?");
-                $adminCheckStmt->bind_param("i", $userId);
-                $adminCheckStmt->execute();
-                $adminCheckStmt->store_result();
-
-                // Redirect based on admin status
-                if ($adminCheckStmt->num_rows > 0) {
-                    header('Location: ../Controller/admin.php');
-                } else {
-                    header('Location: ../Views/home.php');
-                }
-                exit();
+                // Redirect based on role and membership status
+                handleUserAccess($userId);
             } else {
                 $errors[] = "Invalid password.";
             }
@@ -96,5 +85,56 @@ function handleSignIn($data) {
     }
 
     return $errors;
+}
+
+// Handle user access based on membership status and admin role
+function handleUserAccess($userId) {
+    global $conn;
+
+    // Fetch admin and membership status
+    $stmt = $conn->prepare("
+        SELECT 
+            (SELECT COUNT(*) FROM Admins WHERE user_id = ?) AS isAdmin,
+            (SELECT membership_status FROM Users WHERE user_id = ?) AS membershipStatus
+    ");
+    $stmt->bind_param("ii", $userId, $userId);
+    $stmt->execute();
+    $stmt->bind_result($isAdmin, $membershipStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Set session variables
+    $_SESSION['is_admin'] = $isAdmin;
+    $_SESSION['membership_status'] = $membershipStatus;
+
+    // Redirect based on user type and membership
+    if ($isAdmin && $membershipStatus !== 'none') {
+        // Admin and member: Access all pages, but open admin.php first
+        header('Location: ../Controller/admin.php');
+    } elseif (!$isAdmin && $membershipStatus !== 'none') {
+        // Member but not admin: Can access home, workouts, contact, goals
+        header('Location: ../Views/home.php');
+    } elseif ($isAdmin && $membershipStatus === 'none') {
+        // Admin but not member: Access admin pages only
+        header('Location: ../Controller/admin.php');
+    } else {
+        // Neither admin nor member: Can only access home.php
+        header('Location: ../Views/home.php');
+    }
+    exit();
+}
+
+// Check if the user is a member
+function isUserMember($userId) {
+    global $conn;
+
+    $stmt = $conn->prepare("SELECT membership_status FROM Users WHERE user_id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($membershipStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    return $membershipStatus; // Returns membership status (e.g., 'none', 'basic', 'premium')
 }
 ?>

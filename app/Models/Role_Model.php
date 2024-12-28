@@ -1,5 +1,5 @@
 <?php
-include '../config.php';
+include '../Controller/config.php';
 
 class Role_Model {
     private $role_id;

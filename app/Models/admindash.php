@@ -1,6 +1,6 @@
 <?php
 // Include the database connection
-include_once '../config.php';
+include_once 'config.php';
 session_start();
 
 class AdminDashboard {
@@ -73,3 +73,4 @@ class AdminDashboard {
         return $result['workout_logs_today'];
     }
 }
+

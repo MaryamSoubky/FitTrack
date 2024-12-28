@@ -1,6 +1,105 @@
+<?php
+// Start the session
+session_start();
+
+// Include the config.php to use the $conn database connection
+include_once '../Controller/config.php'; // Ensure the path is correct
+
+// Check if user is logged in and has an active membership
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+
+    // Check the membership status of the user
+    $stmt = $conn->prepare("SELECT membership_status FROM Users WHERE user_id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($membershipStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Redirect to subscription page if membership is inactive
+    if ($membershipStatus === 'inactive') {
+        echo "<script>
+            alert('You are not a member. Please subscribe to unlock features. Redirecting to the subscription page.');
+            window.location.href = 'home.php';
+        </script>";
+        exit();
+    }
+
+    // Check if the user has any workout history
+    $stmt = $conn->prepare("
+        SELECT workout_id, exercise_type, duration, intensity, frequency, log_date, notes 
+        FROM workout_log 
+        WHERE user_id = ? 
+        ORDER BY log_date DESC 
+        LIMIT 1
+    ");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $workout = $result->fetch_assoc(); // Fetch the most recent workout if it exists
+    $stmt->close();
+} else {
+    // Redirect to home page if not logged in
+    echo "<script>
+        alert('You are not logged in. Please log in to access this page.');
+        window.location.href = 'home.php';
+    </script>";
+    exit();
+}
+
+// Handle the deletion of a workout if the delete button is clicked
+if (isset($_GET['delete_workout'])) {
+    $workoutId = $_GET['delete_workout'];
+
+    $stmt = $conn->prepare("DELETE FROM workout_log WHERE workout_id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $workoutId, $userId);
+    $stmt->execute();
+    $stmt->close();
+
+    // Set session message for workout deletion
+    $_SESSION['message'] = "Workout deleted successfully!";
+    header("Location: workouts.php");
+    exit();
+}
+
+// Handle the editing of a workout (if the user clicks on edit)
+if (isset($_GET['edit_workout'])) {
+    $workoutId = $_GET['edit_workout'];
+
+    // Fetch the workout data to populate the form
+    $stmt = $conn->prepare("SELECT * FROM workout_log WHERE workout_id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $workoutId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $workout = $result->fetch_assoc();
+    $stmt->close();
+}
+
+// Handle the form submission for updating the workout
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_workout'])) {
+    $workoutId = $_POST['workout_id'];
+    $exerciseType = $_POST['exercise'];
+    $duration = $_POST['duration'];
+    $intensity = $_POST['intensity'];
+    $frequency = $_POST['frequency'];
+    $notes = $_POST['notes'];
+
+    // Update the workout in the database
+    $stmt = $conn->prepare("UPDATE workout_log SET exercise_type = ?, duration = ?, intensity = ?, frequency = ?, notes = ? WHERE workout_id = ? AND user_id = ?");
+    $stmt->bind_param("siiiiii", $exerciseType, $duration, $intensity, $frequency, $notes, $workoutId, $userId);
+    $stmt->execute();
+    $stmt->close();
+
+    // Set session message for workout update
+    $_SESSION['message'] = "Workout updated successfully!";
+    header("Location: workouts.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,278 +107,128 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="../Public/css/style_workout.css">
     <style>
-        /* Enhanced Styles for Modern Look */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        
-        .card {
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: #fff;
-        }
+       
+       .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
 
-        .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
+    .button {
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        background-color: #03045E;
+        color: white;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
 
-        .workout-grid {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: 1fr;
-        }
+    .button-danger {
+        background-color: #03045E;
+    }
 
-        /* Circular Progress Bar Styling */
-        .circular-progress {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            text-align: center;
-            margin: auto;
-        }
-
-        .circular-progress svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform: rotate(-90deg);
-        }
-
-        .circular-progress circle {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-        }
-
-        .circular-bg {
-            stroke: #f0f0f0;
-        }
-
-        .circular-fg {
-            stroke: #4caf50;
-            transition: stroke-dashoffset 0.35s;
-        }
-
-        .progress-percent {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #4caf50;
-            position: relative;
-            top: 30%;
-        }
-
-        /* Photo Gallery Styling */
-        .photo-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1.5rem;
-        }
-
-        .photo-gallery img {
-            width: 100%;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .photo-gallery img:hover {
-            transform: scale(1.05);
-        }
-
-        .photo-caption {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #333;
-            margin-top: 0.5rem;
-        }
-
-        /* Modal for Enlarged Photo View */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .modal img {
-            width: 100%;
-            border-radius: 8px;
-        }
-
-        .close-btn {
-            cursor: pointer;
-            color: #f0f0f0;
-            background-color: #333;
-            padding: 0.5rem 1rem;
-            margin-top: 1rem;
-            border-radius: 8px;
-        }
-
-        /* Responsive Design for Larger Screens */
-        @media (min-width: 768px) {
-            .workout-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+    .button:hover, .button-danger:hover {
+        background-color: #03045E;
+    }
     </style>
 </head>
-
 <body>
-<?php include 'Partials/navbar.php';?>
+    <?php include 'Partials/navbar.php'; ?>
 
-
-    <!-- Motivational Message Section -->
-    <section class="quote-section">
-        <p id="motivational-quote">"Push yourself, because no one else is going to do it for you."</p>
-    </section>
-
-    <!-- Main Content Area -->
     <main class="container">
         <div class="workout-grid">
-            <!-- Workout Log Form -->
-            <section class="card">
-                <hgroup>
-                    <h2>Log Your Workout</h2>
-                    <h3>Track your performance</h3>
-                </hgroup>
-                <?php
-// Check if the 'message' parameter is set in the URL query string
-if (isset($_GET['message'])) {
-    $message = $_GET['message'];
-    echo "<script type='text/javascript'>alert('$message');</script>";
-}
-?>
+            <?php if ($workout): ?>
+                <!-- Display the most recent workout -->
+                <section class="card">
+                    <hgroup>
+                        <h2>Your Most Recent Workout</h2>
+                        <h3>Details of your latest workout</h3>
+                    </hgroup>
+                    <p><strong>Exercise Type:</strong> <?= htmlspecialchars($workout['exercise_type']); ?></p>
+                    <p><strong>Duration:</strong> <?= htmlspecialchars($workout['duration']); ?> minutes</p>
+                    <p><strong>Intensity:</strong> <?= htmlspecialchars($workout['intensity']); ?></p>
+                    <p><strong>Frequency:</strong> <?= htmlspecialchars($workout['frequency']); ?> times per week</p>
+                    <p><strong>Notes:</strong> <?= nl2br(htmlspecialchars($workout['notes'])); ?></p>
+                    <p><strong>Logged Date:</strong> <?= htmlspecialchars($workout['log_date']); ?></p>
+                 
 
-<form action="../Controller/workout_controller.php" method="POST">
-    <label for="exercise">Exercise Type:</label>
-    <input type="text" id="exercise" name="exercise" placeholder="e.g., Running" required>
+                    <!-- Edit and Delete Buttons -->
+                    <div class="buttons">
+                        <a href="?edit_workout=<?= $workout['workout_id']; ?>" class="button">Edit Workout</a>
+                        <a href="?delete_workout=<?= $workout['workout_id']; ?>" class="button button-danger" onclick="return confirm('Are you sure you want to delete this workout?')">Delete Workout</a>
+                    </div>
+                </section>
+            <?php endif; ?>
 
-    <label for="duration">Duration (minutes):</label>
-    <input type="number" id="duration" name="duration" placeholder="e.g., 60" required>
+            <!-- If the user is editing the workout, show the edit form -->
+            <?php if (isset($_GET['edit_workout']) && $workout): ?>
+                <section class="card">
+                    <hgroup>
+                        <h2>Edit Workout</h2>
+                        <h3>Modify your workout details</h3>
+                    </hgroup>
+                    <form action="" method="POST">
+                        <input type="hidden" name="workout_id" value="<?= $workout['workout_id']; ?>">
 
-    <label for="intensity">Intensity (1-10):</label>
-    <input type="number" id="intensity" name="intensity" min="1" max="10" required>
+                        <label for="exercise">Exercise Type:</label>
+                        <input type="text" id="exercise" name="exercise" value="<?= htmlspecialchars($workout['exercise_type']); ?>" required>
 
-    <label for="frequency">Frequency (per week):</label>
-    <input type="number" id="frequency" name="frequency" min="1" max="7" required>
+                        <label for="duration">Duration (minutes):</label>
+                        <input type="number" id="duration" name="duration" value="<?= htmlspecialchars($workout['duration']); ?>" required>
 
-    <label for="notes">Additional Notes:</label>
-    <textarea id="notes" name="notes" rows="4" placeholder="How did the workout feel?"></textarea>
+                        <label for="intensity">Intensity (1-10):</label>
+                        <input type="number" id="intensity" name="intensity" min="1" max="10" value="<?= htmlspecialchars($workout['intensity']); ?>" required>
 
-    <button type="submit" class="button-primary">Submit Workout</button>
-</form>
+                        <label for="frequency">Frequency (per week):</label>
+                        <input type="number" id="frequency" name="frequency" min="1" max="7" value="<?= htmlspecialchars($workout['frequency']); ?>" required>
 
+                        <label for="notes">Additional Notes:</label>
+                        <textarea id="notes" name="notes" rows="4" required><?= htmlspecialchars($workout['notes']); ?></textarea>
 
+                        <button type="submit" name="update_workout" class="button-primary">Update Workout</button>
+                    </form>
+                </section>
+            <?php endif; ?>
 
+            <!-- If no workout, show the workout log form -->
+            <?php if (!$workout): ?>
+                <section class="card">
+                    <hgroup>
+                        <h2>Log Your Workout</h2>
+                        <h3>Start tracking your performance</h3>
+                    </hgroup>
+                    <form action="../Controller/workout_controller.php" method="POST">
+                        <label for="exercise">Exercise Type:</label>
+                        <input type="text" id="exercise" name="exercise" placeholder="e.g., Running" required>
 
-                <p id="confirmation-message" style="display:none; color: green;">Workout logged successfully!</p>
-            </section>
+                        <label for="duration">Duration (minutes):</label>
+                        <input type="number" id="duration" name="duration" placeholder="e.g., 60" required>
 
-            <!-- Exercise Photo Gallery Section -->
-            <section class="card">
-                <h2>Exercise Gallery</h2>
-                <div class="photo-gallery">
-                    <figure>
-                        <img src="../Public/images/workout/cardio-class.jpg" alt="Exercise 1" onclick="openModal('exercise1.jpg')">
-                        <figcaption class="photo-caption">Running</figcaption>
-                    </figure>
-                    <figure>
-                    <img src="../Public/images/workout/cycling.webp" alt="Exercise 2" onclick="openModal('../Public/images/workout/exercise2.jpg')">
-                    <figcaption class="photo-caption">Cycling</figcaption>
-                    </figure>
-                    <figure>
-                        <img src="../Public/images/workout/yoga-class.jpg" alt="Exercise 3" onclick="openModal('exercise3.jpg')">
-                        <figcaption class="photo-caption">Yoga</figcaption>
-                    </figure>
-                </div>
-            </section>
+                        <label for="intensity">Intensity (1-10):</label>
+                        <input type="number" id="intensity" name="intensity" min="1" max="10" required>
 
-            <!-- Progress Section with Circular Progress -->
-            <section class="card">
-                <h2>Weekly Goal Progress</h2>
-                <div class="circular-progress">
-                    <svg>
-                        <circle class="circular-bg" cx="50" cy="50" r="40"></circle>
-                        <circle class="circular-fg" cx="50" cy="50" r="40"></circle>
-                    </svg>
-                    <div class="progress-percent" id="progress-percent">0%</div>
-                </div>
-            </section>
+                        <label for="frequency">Frequency (per week):</label>
+                        <input type="number" id="frequency" name="frequency" min="1" max="7" required>
+
+                        <label for="notes">Additional Notes:</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="How did the workout feel?"></textarea>
+
+                        <button type="submit" class="button-primary">Submit Workout</button>
+                    </form>
+                </section>
+            <?php endif; ?>
         </div>
     </main>
 
-    <!-- Modal for Enlarged Photo View -->
-    <div id="photo-modal" class="modal">
-        <div class="modal-content">
-            <img id="modal-image" src="" alt="Enlarged Exercise Photo">
-            <button class="close-btn" onclick="closeModal()">Close</button>
-        </div>
-    </div>
-
-    <!-- JavaScript for Interactive Features -->
-    <script>
-        // JavaScript for motivational quotes rotation
-        const quotes = [
-            "Push yourself, because no one else is going to do it for you.",
-            "Success starts with self-discipline.",
-            "The pain you feel today will be the strength you feel tomorrow.",
-            "Strive for progress, not perfection."
-        ];
-
-        function updateQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            document.getElementById('motivational-quote').innerText = quotes[randomIndex];
-        }
-        
-        setInterval(updateQuote, 5000); // Rotate quotes every 5 seconds
-
-        // Confirmation message on form submission
-        function showConfirmation(event) {
-    event.preventDefault();
-    document.getElementById("confirmation-message").style.display = "block";
-    setTimeout(() => {
-        document.getElementById("confirmation-message").style.display = "none";
-    }, 3000);
-}
-
-        // Circular progress animation
-        function setProgress(percent) {
-            const circumference = 2 * Math.PI * 40;
-            const offset = circumference - (percent / 100) * circumference;
-            document.querySelector(".circular-fg").style.strokeDasharray = circumference;
-            document.querySelector(".circular-fg").style.strokeDashoffset = offset;
-        }
-
-        // Modal Functions for Enlarged Photo View
-        function openModal(imageSrc) {
-            document.getElementById('modal-image').src = imageSrc;
-            document.getElementById('photo-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('photo-modal').style.display = 'none';
-        }
-    </script>
+    <!-- Display success message if set in session -->
+    <?php if (isset($_SESSION['message'])): ?>
+        <script>
+            alert("<?= $_SESSION['message']; ?>");
+        </script>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
 </body>
-
 </html>

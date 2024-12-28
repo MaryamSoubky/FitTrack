@@ -1,5 +1,5 @@
 <?php
-include '../config.php'; 
+include '../Controller/config.php'; 
 
 class User {
     private $user_id;

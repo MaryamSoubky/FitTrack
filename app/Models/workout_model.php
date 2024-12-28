@@ -1,4 +1,6 @@
 <?php
+
+//workout_model.php
 class WorkoutModel {
     private $db;
 

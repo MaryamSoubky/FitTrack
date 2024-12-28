@@ -1,3 +1,23 @@
+<?php
+
+
+// Assuming the user is logged in and their ID is stored in the session
+$userId = $_SESSION['user_id'] ?? null;
+$membershipStatus = 'inactive';  // Default membership status
+
+// Fetch the user's membership status if logged in
+if ($userId) {
+    $stmt = $conn->prepare("SELECT membership_status FROM Users WHERE user_id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($membershipStatus);
+    $stmt->fetch();
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,13 +27,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
       .navbar {
-      background: var(--dark-color);
-      padding: 1rem;
+        background: var(--dark-color);
+        padding: 1rem;
       }
-      
+
       .navbar-expand-lg .navbar-nav .nav-link {
-      padding-right: 1.5rem;
-      padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-left: 1.5rem;
       }
 
       nav .navbar-brand {
@@ -23,7 +43,7 @@
         line-height: normal;
         padding-top: 0;
       }
-  
+
       .nav-item .nav-link {
         display: block;
         color: var(--white-color);
@@ -32,15 +52,16 @@
         text-transform: uppercase;
         padding: 2px 6px;
       }
+
       .nav-item .nav-link.active,
       .nav-item .nav-link:hover {
         color: var(--primary-color);
       }
-  
+
       .navbar .social-icon li a {
         color: var(--white-color);
       }
-  
+
       .navbar-toggler {
         border: 0;
         padding: 0;
@@ -50,15 +71,15 @@
         height: 35px;
         outline: none;
       }
-  
+
       .navbar-toggler:focus {
         outline: none;
       }
-  
+
       .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
         background: transparent;
       }
-  
+
       .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::before,
       .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after {
         transition: top 300ms 50ms ease, -webkit-transform 300ms 350ms ease;
@@ -66,15 +87,15 @@
         transition: top 300ms 50ms ease, transform 300ms 350ms ease, -webkit-transform 300ms 350ms ease;
         top: 0;
       }
-  
+
       .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::before {
         transform: rotate(45deg);
       }
-  
+
       .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after {
         transform: rotate(-45deg);
       }
-  
+
       .navbar-toggler .navbar-toggler-icon {
         background: var(--primary-color);
         transition: background 10ms 300ms ease;
@@ -83,7 +104,7 @@
         height: 2px;
         position: relative;
       }
-  
+
       .navbar-toggler .navbar-toggler-icon::before,
       .navbar-toggler .navbar-toggler-icon::after {
         transition: top 300ms 350ms ease, -webkit-transform 300ms 50ms ease;
@@ -97,20 +118,31 @@
         height: 2px;
         content: '';
       }
-  
+
       .navbar-toggler .navbar-toggler-icon::before {
         top: -8px;
       }
-  
+
       .navbar-toggler .navbar-toggler-icon::after {
         top: 8px;
+      }
+
+      .logout-btn {
+        color: var(--white-color);
+        font-size: 1.5rem;
+        margin-left: 15px;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        color: var(--primary-color);
       }
     </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="index.html">FitTrack</a>
+        <a class="navbar-brand" href="index.php">FitTrack</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -119,8 +151,9 @@
               <li class="nav-item">
                 <a href="../Views/home.php" class="nav-link smoothScroll">Home</a>
               </li>
+              <?php if ($membershipStatus === 'active'): ?>
               <li class="nav-item">
-                <a href="../Views/goal_view.php" class="nav-link smoothScroll">goal tracker</a>
+                <a href="../Views/goal_view.php" class="nav-link smoothScroll">Goal Tracker</a>
               </li>
               <li class="nav-item">
                 <a href="../Views/workouts.php" class="nav-link smoothScroll">Workouts</a>
@@ -128,14 +161,15 @@
               <li class="nav-item">
                 <a href="../Views/schedules.php" class="nav-link smoothScroll">Tracking Feature</a>
               </li>
+              <?php endif; ?>
               <li class="nav-item">
                 <a href="../Views/contact.php" class="nav-link smoothScroll">Contact Us</a>
               </li>
             </ul>
             <ul class="social-icon ml-lg-3">
-              <li><a href="https://www.facebook.com/mostafaamin.ellakwa" class="fa fa-facebook"></a></li>
-              <li><a href="#" class="fa fa-twitter"></a></li>
-              <li><a href="#" class="fa fa-instagram"></a></li>
+              <li><a href="../Views/profile.php" class="fa fa-user"></a></li>
+              <!-- Add Logout Icon -->
+              <li><a href="../Views/index.php" class="logout-btn fa fa-sign-out"></a></li>
             </ul>
           </div>
       </div>
