@@ -1,0 +1,82 @@
+/* Form Container */
+.modal-body form {
+    background: var(--white-color);
+    padding: 20px 30px;
+    border-radius: var(--border-radius-small);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+    font-family: var(--base-font-family);
+}
+
+/* Form Label */
+.modal-body form label {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--base-font-size);
+    margin-bottom: 5px;
+    color: var(--dark-color);
+    display: block;
+}
+
+/* Form Input Fields */
+.modal-body form input[type="text"],
+.modal-body form input[type="date"],
+.modal-body form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius-small);
+    font-size: var(--base-font-size);
+    font-family: var(--base-font-family);
+    transition: all 0.3s ease;
+}
+
+.modal-body form input[type="text"]:focus,
+.modal-body form input[type="date"]:focus,
+.modal-body form select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Submit Button */
+.modal-body form input[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    font-size: var(--base-font-size);
+    font-weight: var(--font-weight-bold);
+    padding: 14px 24px;
+    border: none;
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.modal-body form input[type="submit"]:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+}
+
+/* Adjustments for smaller screen sizes */
+@media screen and (max-width: 767px) {
+    .modal-body form {
+        padding: 15px;
+        width: 90%;
+    }
+
+    .modal-body form label {
+        font-size: 14px;
+    }
+
+    .modal-body form input[type="text"],
+    .modal-body form input[type="date"],
+    .modal-body form select {
+        font-size: 14px;
+    }
+
+    .modal-body form input[type="submit"] {
+        padding: 12px;
+        font-size: 14px;
+    }
+}

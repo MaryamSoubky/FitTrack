@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+
+:root {
+    --primary-color: #03045E; /* Deep blue */
+    --light-color: #03045E; /* Same deep blue for consistent branding */
+    --white-color: #FFFFFF; /* White for text and backgrounds */
+    --dark-color: #03045E; /* Dark blue */
+    --about-bg-color: #03045E; /* Background color for sections */
+    --gray-color: #909090; /* Neutral gray for subtle accents */
+    --link-color: #404040; /* Darker gray for links */
+    --hover-color: #EEF5FF; /* Light hover effect */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    --p-color: #666262; /* Subtle gray for paragraph text */
+}
+
+body {
+    background-color: var(--hover-color);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--dark-color);
+    margin: 0;
+    padding: 0;
+}
+
+header h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin: 20px 0;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.report-section {
+    background-color: var(--white-color);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    margin-bottom: 30px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px var(--shadow-color);
+}
+
+.report-section h2 {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead th {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    text-align: left;
+    padding: 12px 15px;
+    border: 1px solid var(--primary-color);
+    font-weight: 600;
+}
+
+tbody td {
+    padding: 12px 15px;
+    border: 1px solid var(--gray-color);
+    text-align: left;
+    color: var(--dark-color);
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--hover-color);
+}
+
+tbody tr:hover {
+    background-color: var(--light-color);
+    color: var(--white-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+tfoot td {
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-color);
+    padding: 15px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Buttons for potential interactivity */
+button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--light-color);
+    transform: scale(1.05);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.9rem;
+    }
+
+    tbody td {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .report-section h2 {
+        font-size: 1.5rem;
+    }
+}

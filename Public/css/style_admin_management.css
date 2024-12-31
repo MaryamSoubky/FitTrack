@@ -1,0 +1,156 @@
+/* General reset and body styling */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f8fa;
+    color: #333;
+    height: 100%;
+}
+
+/* Home section container */
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Main title */
+.text {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0277BD;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+/* Form container */
+.form-container {
+    background: linear-gradient(135deg, #ffffff, #e3f2fd);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 650px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Form container hover effect */
+.form-container:hover {
+    transform: translateY(-10px);
+}
+
+/* Form heading */
+.form-container h3 {
+    font-size: 2rem;
+    color: #0277BD;
+    margin-bottom: 25px;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Select and input fields */
+select, input, button {
+    padding: 14px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus effect for select and input */
+select:focus, input:focus {
+    border-color: #0277BD;
+    outline: none;
+}
+
+/* Buttons */
+button {
+    background-color: #0277BD;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #01579B;
+    transform: scale(1.05);
+}
+
+/* Custom button class */
+.btn-custom {
+    background-color: #01579B;
+    color: #fff;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0277BD;
+}
+
+/* Back button */
+.back-button button {
+    background-color: #0288D1;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.back-button button:hover {
+    background-color: #0277BD;
+}
+
+/* Alert styling */
+.alert {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 25px;
+    }
+
+    .text {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .home {
+        padding: 20px;
+    }
+
+    .text {
+        font-size: 2rem;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+}
